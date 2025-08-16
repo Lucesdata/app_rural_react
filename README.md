@@ -1,12 +1,70 @@
-# React + Vite
+# App_Rural - Monitoreo de Agua Potable
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para el monitoreo de calidad de agua potable en zonas rurales.
 
-Currently, two official plugins are available:
+## Estado Actual
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Home provisional** con diseño base que incluye:
+  - Navbar fijo con efecto vidrio
+  - Sección hero con título y descripción
+  - KPIs de ejemplo
+  - Diseño responsivo y accesible
 
-## Expanding the ESLint configuration
+## Tecnologías
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React 18
+- Vite
+- React Router
+- CSS Modules
+- PostCSS (para anidamiento CSS)
+
+## Estructura de Estilos
+
+- `src/styles/tokens.css` - Variables de diseño (colores, tipografía, espaciados)
+- `src/styles/global.css` - Estilos globales y reset
+- `src/styles/ui.module.css` - Componentes y utilidades reutilizables
+- `src/styles/home.module.css` - Estilos específicos de la página de inicio
+
+## Requisitos
+
+- Node.js 16+ (recomendado LTS)
+- npm o yarn
+
+## Instalación
+
+1. Clonar el repositorio
+2. Instalar dependencias:
+   ```bash
+   npm install
+   # o
+   yarn
+   ```
+3. Iniciar servidor de desarrollo:
+   ```bash
+   npm run dev
+   # o
+   yarn dev
+   ```
+
+## Construcción para Producción
+
+```bash
+npm run build
+# o
+yarn build
+```
+
+## Características Implementadas
+
+- Diseño responsivo
+- Navegación con React Router
+- Efectos visuales con CSS puro
+- Variables CSS para temas y estilos consistentes
+- Accesibilidad básica (ARIA, contraste, navegación por teclado)
+
+## Próximos Pasos
+
+- Implementar autenticación
+- Desarrollar dashboard con datos reales
+- Añadir gráficos y visualizaciones
+- Integrar con API de sensores
