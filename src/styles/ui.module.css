@@ -302,6 +302,38 @@
   flex-wrap: wrap;
 }
 
+/* Grid Layouts */
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+/* Hero Section */
+.hero {
+  padding: calc(var(--space-20) + var(--nav-h)) 0 var(--space-16);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: var(--fs-5xl);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.heroSubtitle {
+  font-size: var(--fs-xl);
+  color: var(--color-muted);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .kpiRow {

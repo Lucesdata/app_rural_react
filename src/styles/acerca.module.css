@@ -1,0 +1,127 @@
+@import './tokens.css';
+
+/* Base Section Styles */
+.section {
+  padding: var(--space-10) 0;
+  position: relative;
+}
+
+/* Card Styles */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--color-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+}
+
+/* Hero Section */
+.hero {
+  min-height: calc(100vh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-16) var(--space-4);
+  text-align: center;
+  margin-top: var(--nav-h);
+}
+
+.hero h1 {
+  font-size: var(--fs-4xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.hero p {
+  font-size: var(--fs-xl);
+  color: var(--color-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Grid Layout */
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  margin: var(--space-8) 0;
+}
+
+.gridThree h3 {
+  font-size: var(--fs-lg);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.gridThree p {
+  color: var(--color-text-muted);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+}
+
+/* Placeholder for Coverage */
+.placeholder {
+  height: 220px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg);
+  color: var(--color-muted);
+  margin: var(--space-4) 0;
+  font-size: var(--fs-lg);
+}
+
+/* Chips Container */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+/* CTA Section */
+.ctaSection {
+  text-align: center;
+  padding: var(--space-12) 0;
+  margin-top: var(--space-8);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .gridThree {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .hero {
+    min-height: calc(100vh - var(--nav-h));
+    padding: var(--space-12) var(--space-4);
+  }
+  
+  .hero h1 {
+    font-size: var(--fs-3xl);
+  }
+  
+  .hero p {
+    font-size: var(--fs-lg);
+  }
+  
+  .section {
+    padding: var(--space-8) 0;
+  }
+}

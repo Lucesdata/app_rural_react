@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
+import Acerca from './pages/Acerca';
 import styles from './styles/home.module.css';
 import uiStyles from './styles/ui.module.css';
 
@@ -77,6 +78,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/acerca" element={<Acerca />} />
       </Routes>
     </div>
   );

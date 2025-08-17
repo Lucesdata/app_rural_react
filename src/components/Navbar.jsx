@@ -33,9 +33,16 @@ const Navbar = () => {
             className={({ isActive }) => 
               `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
             }
-            end
           >
             Dashboard
+          </NavLink>
+          <NavLink 
+            to="/acerca" 
+            className={({ isActive }) => 
+              `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+            }
+          >
+            Acerca
           </NavLink>
         </div>
       </div>
