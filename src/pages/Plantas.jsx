@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { getFilteredPlants, getFuenteOptions } from '../lib/apiClient';
 import uiStyles from '../styles/ui.module.css';
 import styles from '../styles/plantas.module.css';
+import Loading from '../components/feedback/Loading';
+import Empty from '../components/feedback/Empty';
+import Error from '../components/feedback/Error';
 
 const Plantas = () => {
   const [plants, setPlants] = useState([]);
@@ -42,7 +45,7 @@ const Plantas = () => {
         setPlants(filteredPlants);
       } catch (err) {
         console.error('Error loading plants:', err);
-        setError('Error al cargar las plantas. Por favor, intente nuevamente.');
+        setError(err);
       } finally {
         setLoading(false);
       }
@@ -68,10 +71,11 @@ const Plantas = () => {
     setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
   };
 
+  // Show loading, error, or empty states
   if (loading && plants.length === 0) {
     return (
       <div className={`${uiStyles.container} ${styles.container}`}>
-        <div className={styles.loading}>Cargando plantas...</div>
+        <Loading message="Cargando plantas de tratamiento..." />
       </div>
     );
   }
@@ -79,7 +83,11 @@ const Plantas = () => {
   if (error) {
     return (
       <div className={`${uiStyles.container} ${styles.container}`}>
-        <div className={styles.error}>{error}</div>
+        <Error 
+          message="Error al cargar las plantas" 
+          error={error} 
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
@@ -130,9 +138,10 @@ const Plantas = () => {
       </div>
       
       {plants.length === 0 ? (
-        <div className={styles.emptyState}>
-          No se encontraron plantas que coincidan con los filtros seleccionados.
-        </div>
+        <Empty 
+          message="No se encontraron plantas que coincidan con los filtros seleccionados." 
+          icon="🌱"
+        />
       ) : (
         <div className={styles.plantsGrid}>
           {plants.map(plant => (

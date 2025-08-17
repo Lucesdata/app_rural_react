@@ -8,6 +8,29 @@
   padding: 0 var(--space-4);
 }
 
+/* Main content area */
+.mainContent {
+  min-height: calc(100vh - var(--nav-h) - 120px); /* Viewport height - navbar height - footer height */
+  padding: var(--space-6) 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure body has proper spacing for fixed footer */
+:global(body) {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+:global(#root) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 /* Secciones */
 .section {
   padding: var(--space-10) 0;
@@ -110,15 +133,60 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
   z-index: 1000;
-  background: var(--backdrop-bg);
-  backdrop-filter: var(--backdrop-blur);
-  -webkit-backdrop-filter: var(--backdrop-blur);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
   height: var(--nav-h);
+  padding: 0 var(--space-4);
+}
+
+/* Role Selector */
+.roleSelector {
   display: flex;
   align-items: center;
+  margin-left: auto;
+  position: relative;
+}
+
+.roleLabel {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  margin-right: var(--space-2);
+  white-space: nowrap;
+}
+
+.roleSelect {
+  appearance: none;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-8) var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 120px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1em;
+}
+
+.roleSelect:hover {
+  border-color: var(--color-primary);
+}
+
+.roleSelect:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+.roleSelect option {
+  padding: var(--space-2);
 }
 
 .navContainer {
@@ -208,6 +276,64 @@
 
 .logoActive {
   color: var(--color-primary);
+}
+
+/* Feedback Components */
+.feedbackContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  min-height: 200px;
+}
+
+.feedbackIcon {
+  font-size: 3rem;
+  margin-bottom: var(--space-4);
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.errorIcon {
+  color: var(--color-error);
+}
+
+.feedbackMessage {
+  color: var(--color-text-muted);
+  font-size: var(--fs-lg);
+  margin: 0 0 var(--space-4);
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.errorDetails {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-error);
+  margin-top: var(--space-2);
+  opacity: 0.8;
+}
+
+.retryButton {
+  margin-top: var(--space-2);
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--space-4);
 }
 
 /* Responsive adjustments */

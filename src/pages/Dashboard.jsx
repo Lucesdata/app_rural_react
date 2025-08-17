@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/dashboard.module.css';
 import uiStyles from '../styles/ui.module.css';
+import Loading from '../components/feedback/Loading';
+import Empty from '../components/feedback/Empty';
+import Error from '../components/feedback/Error';
 
 // Componente para las barras de progreso
 const ProgressBar = ({ percentage, label, color = 'primary' }) => (
@@ -45,14 +48,38 @@ const StatusCell = ({ status }) => {
 };
 
 const Dashboard = () => {
-  // Datos mock para la tabla de plantas
-  const plantsData = [
-    { id: 1, name: 'Campoalegre', vereda: 'La Esperanza', status: 'normal', flow: '12.5', users: 245 },
-    { id: 2, name: 'Soledad', vereda: 'El Porvenir', status: 'warning', flow: '8.2', users: 178 },
-    { id: 3, name: 'Cascajal', vereda: 'San Isidro', status: 'normal', flow: '15.7', users: 312 },
-    { id: 4, name: 'Voragine', vereda: 'El Edén', status: 'danger', flow: '5.3', users: 92 },
-    { id: 5, name: 'Carbonero', vereda: 'Las Brisas', status: 'normal', flow: '10.1', users: 203 },
-  ];
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [plantsData, setPlantsData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Simulando carga de datos
+        setLoading(true);
+        // En una implementación real, aquí iría la llamada a la API
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Datos mock para la tabla de plantas
+        const mockData = [
+          { id: 1, name: 'Campoalegre', vereda: 'La Esperanza', status: 'normal', flow: '12.5', users: 245 },
+          { id: 2, name: 'Soledad', vereda: 'El Porvenir', status: 'warning', flow: '8.2', users: 178 },
+          { id: 3, name: 'Cascajal', vereda: 'San Isidro', status: 'normal', flow: '15.7', users: 312 },
+          { id: 4, name: 'Voragine', vereda: 'El Edén', status: 'danger', flow: '5.3', users: 92 },
+          { id: 5, name: 'Carbonero', vereda: 'Las Brisas', status: 'normal', flow: '10.1', users: 203 },
+        ];
+        
+        setPlantsData(mockData);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error al cargar los datos:', err);
+        setError(err);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Datos mock para las alertas
   const alertsData = [
@@ -60,6 +87,11 @@ const Dashboard = () => {
     { id: 2, time: '09:45 AM', message: 'Falla en sensor de caudal en Voragine', severity: 'danger' },
     { id: 3, time: '08:12 AM', message: 'Mantenimiento programado completado', severity: 'info' },
   ];
+
+  // Mostrar estados de carga, error o vacío
+  if (loading) return <Loading message="Cargando datos del panel..." />;
+  if (error) return <Error message="Error al cargar el panel" error={error} onRetry={() => window.location.reload()} />;
+  if (plantsData.length === 0) return <Empty message="No hay datos disponibles para mostrar" />;
 
   return (
     <div className={styles.dashboard}>
@@ -69,20 +101,20 @@ const Dashboard = () => {
           <p className={styles.subtitle}>Resumen en tiempo real de plantas rurales (datos de prueba)</p>
         </header>
 
-      {/* Sección de KPIs */}
-      <section className={uiStyles.section}>
-        <div className={uiStyles.kpiRow}>
-          <div className={uiStyles.kpiCard}>
-            <div className={styles.kpiValue}>42</div>
-            <div className={styles.kpiLabel}>Sensores activos</div>
-          </div>
-          <div className={uiStyles.kpiCard}>
-            <div className={styles.kpiValue}>8.1</div>
-            <div className={styles.kpiLabel}>Caudal promedio (L/s)</div>
-          </div>
-          <div className={uiStyles.kpiCard}>
-            <div className={styles.kpiValue}>99.2%</div>
-            <div className={styles.kpiLabel}>Disponibilidad</div>
+        {/* Sección de KPIs */}
+        <section className={uiStyles.section}>
+          <div className={uiStyles.kpiRow}>
+            <div className={uiStyles.kpiCard}>
+              <div className={styles.kpiValue}>42</div>
+              <div className={styles.kpiLabel}>Sensores activos</div>
+            </div>
+            <div className={uiStyles.kpiCard}>
+              <div className={styles.kpiValue}>8.1</div>
+              <div className={styles.kpiLabel}>Caudal promedio (L/s)</div>
+            </div>
+            <div className={uiStyles.kpiCard}>
+              <div className={styles.kpiValue}>99.2%</div>
+              <div className={styles.kpiLabel}>Disponibilidad</div>
           </div>
         </div>
       </section>

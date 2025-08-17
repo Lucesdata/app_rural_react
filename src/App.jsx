@@ -1,9 +1,12 @@
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Dashboard from './pages/Dashboard';
 import Acerca from './pages/Acerca';
 import Plantas from './pages/Plantas';
+import PlantDetail from './pages/PlantDetail';
 import styles from './styles/home.module.css';
 import uiStyles from './styles/ui.module.css';
 
@@ -69,20 +72,32 @@ const Home = () => {
   );
 };
 
-function App() {
+function AppContent() {
   const location = useLocation();
   const isHome = location.pathname === '/';
   
   return (
     <div className={isHome ? styles.homeContainer : ''}>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/acerca" element={<Acerca />} />
-        <Route path="/plantas" element={<Plantas />} />
-      </Routes>
+      <main className={styles.mainContent}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/acerca" element={<Acerca />} />
+          <Route path="/plantas" element={<Plantas />} />
+          <Route path="/plantas/:id" element={<PlantDetail />} />
+        </Routes>
+      </main>
+      <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
