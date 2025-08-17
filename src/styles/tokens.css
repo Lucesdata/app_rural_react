@@ -1,0 +1,53 @@
+:root {
+  /* Colores del tema agua */
+  --color-bg: #0f172a;         /* Azul muy oscuro grisáceo */
+  --color-surface: #1e293b;    /* Gris azulado */
+  --color-primary: #06b6d4;    /* Azul agua */
+  --color-accent: #22d3ee;     /* Cian/Aqua */
+  --color-text: #f8fafc;       /* Blanco suave */
+  --color-muted: #94a3b8;      /* Gris claro */
+  --color-border: rgba(148, 163, 184, 0.2); /* Gris traslúcido */
+  --color-success: #2dd4bf;    /* Verde agua */
+
+  /* Tipografía */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --fs-xs: 0.75rem;    /* 12px */
+  --fs-sm: 0.875rem;   /* 14px */
+  --fs-base: 1rem;     /* 16px */
+  --fs-lg: 1.125rem;   /* 18px */
+  --fs-xl: 1.25rem;    /* 20px */
+  --fs-2xl: 1.5rem;    /* 24px */
+  --fs-3xl: 1.875rem;  /* 30px */
+  --fs-4xl: 2.25rem;   /* 36px */
+  --fs-5xl: 3rem;      /* 48px */
+
+  /* Espaciados */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.5rem;   /* 24px */
+  --space-6: 2rem;     /* 32px */
+  --space-8: 3rem;     /* 48px */
+  --space-10: 4rem;    /* 64px */
+  --space-12: 6rem;    /* 96px */
+
+  /* Radios */
+  --radius-sm: 0.25rem;  /* 4px */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 1rem;     /* 16px */
+  --radius-xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px; /* Para botones circulares */
+
+  /* Sombras */
+  --shadow-1: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  /* Efecto vidrio */
+  --backdrop-blur: blur(8px);
+  --backdrop-bg: rgba(15, 23, 42, 0.7);
+  
+  /* Layout */
+  --nav-h: 64px;  /* Altura del navbar */
+}

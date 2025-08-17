@@ -1,35 +1,85 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Dashboard from './pages/Dashboard';
+import styles from './styles/home.module.css';
+import uiStyles from './styles/ui.module.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Componentes auxiliares para las ondas de fondo
+const WaveBackground = () => (
+  <>
+    <div className={`${styles.wave} ${styles.wave1}`} aria-hidden="true" />
+    <div className={`${styles.wave} ${styles.wave2}`} aria-hidden="true" />
+    <div className={`${styles.wave} ${styles.wave3}`} aria-hidden="true" />
+  </>
+);
+
+// Componente para las tarjetas KPI
+const KpiCard = ({ value, label }) => (
+  <div className={styles.kpiCard}>
+    <div className={styles.kpiValue}>{value}</div>
+    <div className={styles.kpiLabel}>{label}</div>
+  </div>
+);
+
+const Home = () => {
+  // Datos mock para las tarjetas KPI
+  const kpiData = [
+    { value: '98%', label: 'Calidad OK' },
+    { value: '24/7', label: 'Monitoreo' },
+    { value: '1.2K', label: 'Usuarios' },
+  ];
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className={styles.hero}>
+      <WaveBackground />
+      <div className={uiStyles.container}>
+        <main className={styles.heroContent}>
+          <h1 className={styles.title}>
+            Monitoreo rural de agua potable
+          </h1>
+          
+          <p className={styles.subtitle}>
+            Visualiza estado, sensores y servicio en tiempo real para comunidades rurales.
+          </p>
+          
+          <div className={styles.ctaRow}>
+            <a href="/dashboard" className={uiStyles.btnPrimary}>
+              Ir al Dashboard
+            </a>
+            <button type="button" className={uiStyles.btnGhost}>
+              Conocer más
+            </button>
+          </div>
+          
+          <div className={styles.kpiRow}>
+            {kpiData.map((kpi, index) => (
+              <KpiCard 
+                key={index}
+                value={kpi.value}
+                label={kpi.label}
+              />
+            ))}
+          </div>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
+};
+
+function App() {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+  
+  return (
+    <div className={isHome ? styles.homeContainer : ''}>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;

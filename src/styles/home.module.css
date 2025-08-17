@@ -1,0 +1,92 @@
+@import './tokens.css';
+
+.hero {
+  composes: hero from './ui.module.css';
+  padding-top: 80px; /* Ajuste para el navbar fijo */
+}
+
+.heroContent {
+  composes: heroContent from './ui.module.css';
+  padding: var(--space-12) 0;
+}
+
+.title {
+  composes: title from './ui.module.css';
+  margin-bottom: var(--space-6);
+}
+
+.subtitle {
+  composes: subtitle from './ui.module.css';
+  margin-bottom: var(--space-10);
+}
+
+.ctaRow {
+  composes: ctaRow from './ui.module.css';
+  margin-top: var(--space-8);
+}
+
+.kpiRow {
+  composes: kpiRow from './ui.module.css';
+  margin-top: var(--space-12);
+}
+
+.kpiCard {
+  composes: kpiCard from './ui.module.css';
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-3);
+}
+
+.kpiValue {
+  composes: kpiValue from './ui.module.css';
+  margin-bottom: var(--space-2);
+}
+
+.kpiLabel {
+  composes: kpiLabel from './ui.module.css';
+}
+
+/* Efecto de ondas sutiles en el fondo */
+@keyframes waveAnimation {
+  0% { transform: translateY(0) scale(1); opacity: 0.1; }
+  50% { transform: translateY(-10px) scale(1.02); opacity: 0.15; }
+  100% { transform: translateY(0) scale(1); opacity: 0.1; }
+}
+
+.wave {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-primary), transparent);
+  opacity: 0.1;
+  pointer-events: none;
+  animation: waveAnimation 15s infinite ease-in-out;
+}
+
+.wave1 {
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.wave2 {
+  width: 500px;
+  height: 500px;
+  bottom: -200px;
+  left: -200px;
+  animation-delay: 3s;
+  animation-duration: 20s;
+}
+
+.wave3 {
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  right: -150px;
+  animation-delay: 7s;
+  animation-duration: 25s;
+}
