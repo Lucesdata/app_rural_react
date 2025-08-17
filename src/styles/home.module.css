@@ -1,92 +1,90 @@
 @import './tokens.css';
 
+/* Hero section */
 .hero {
-  composes: hero from './ui.module.css';
-  padding-top: 80px; /* Ajuste para el navbar fijo */
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--color-bg-dark) 0%, var(--color-bg-darker) 100%);
+  padding: var(--space-12) 0;
+  margin-top: 80px; /* Space for fixed navbar */
 }
 
 .heroContent {
-  composes: heroContent from './ui.module.css';
-  padding: var(--space-12) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  width: 100%;
 }
 
 .title {
-  composes: title from './ui.module.css';
+  font-size: var(--fs-4xl);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text-light);
   margin-bottom: var(--space-6);
+  width: 100%;
 }
 
 .subtitle {
-  composes: subtitle from './ui.module.css';
-  margin-bottom: var(--space-10);
+  font-size: var(--fs-lg);
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0 auto var(--space-10);
+  line-height: 1.6;
+  width: 100%;
 }
 
 .ctaRow {
-  composes: ctaRow from './ui.module.css';
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
   margin-top: var(--space-8);
+  width: 100%;
 }
 
 .kpiRow {
-  composes: kpiRow from './ui.module.css';
-  margin-top: var(--space-12);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-6);
+  margin: var(--space-12) auto 0;
+  max-width: 800px;
+  width: 100%;
 }
 
 .kpiCard {
-  composes: kpiCard from './ui.module.css';
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .kpiCard:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-3);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .kpiValue {
-  composes: kpiValue from './ui.module.css';
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  color: var(--color-primary);
   margin-bottom: var(--space-2);
+  line-height: 1;
 }
 
 .kpiLabel {
-  composes: kpiLabel from './ui.module.css';
-}
-
-/* Efecto de ondas sutiles en el fondo */
-@keyframes waveAnimation {
-  0% { transform: translateY(0) scale(1); opacity: 0.1; }
-  50% { transform: translateY(-10px) scale(1.02); opacity: 0.15; }
-  100% { transform: translateY(0) scale(1); opacity: 0.1; }
-}
-
-.wave {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--color-primary), transparent);
-  opacity: 0.1;
-  pointer-events: none;
-  animation: waveAnimation 15s infinite ease-in-out;
-}
-
-.wave1 {
-  width: 300px;
-  height: 300px;
-  top: -100px;
-  right: -100px;
-  animation-delay: 0s;
-}
-
-.wave2 {
-  width: 500px;
-  height: 500px;
-  bottom: -200px;
-  left: -200px;
-  animation-delay: 3s;
-  animation-duration: 20s;
-}
-
-.wave3 {
-  width: 400px;
-  height: 400px;
-  top: 50%;
-  right: -150px;
-  animation-delay: 7s;
-  animation-duration: 25s;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
