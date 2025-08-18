@@ -2,13 +2,17 @@
 
 /* Hero section */
 .hero {
-  min-height: calc(100vh - 80px);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, var(--color-bg-dark) 0%, var(--color-bg-darker) 100%);
   padding: var(--space-12) 0;
-  margin-top: 80px; /* Space for fixed navbar */
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--color-bg-dark) 0%, var(--color-bg-darker) 100%);
+  margin: 0;
+  padding-top: 80px; /* Space for fixed navbar */
+  box-sizing: border-box;
 }
 
 .heroContent {
@@ -21,6 +25,8 @@
   margin: 0 auto;
   padding: 0 var(--space-6);
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .title {
@@ -43,7 +49,7 @@
 
 .ctaRow {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-4);
   justify-content: center;
   flex-wrap: wrap;
   margin-top: var(--space-8);
@@ -87,4 +93,48 @@
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Wave effects */
+.wave {
+  position: fixed; /* Changed from absolute to fixed */
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-primary), transparent);
+  opacity: 0.1;
+  pointer-events: none;
+  animation: waveAnimation 15s infinite ease-in-out;
+  z-index: 0; /* Ensure it stays behind content */
+  overflow: hidden;
+}
+
+.wave1 {
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.wave2 {
+  width: 500px;
+  height: 500px;
+  bottom: -200px;
+  left: -200px;
+  animation-delay: 3s;
+  animation-duration: 20s;
+}
+
+.wave3 {
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  right: -150px;
+  animation-delay: 7s;
+  animation-duration: 25s;
+}
+
+@keyframes waveAnimation {
+  0% { transform: translateY(0) scale(1); opacity: 0.1; }
+  50% { transform: translateY(-10px) scale(1.02); opacity: 0.15; }
+  100% { transform: translateY(0) scale(1); opacity: 0.1; }
 }

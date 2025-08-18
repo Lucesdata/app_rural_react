@@ -8,17 +8,13 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navContainer}>
-        <div className={styles.navLogo}>
-          <NavLink 
-            to="/" 
-            className={({ isActive }) => 
-              `${styles.logoLink} ${isActive ? styles.logoActive : ''}`
-            }
-            end
-          >
-            App_Rural
-          </NavLink>
-        </div>
+        <NavLink 
+          to="/" 
+          className={styles.brand}
+          end
+        >
+          App_Rural
+        </NavLink>
         
         <div className={styles.navLinks}>
           <NavLink 
@@ -29,6 +25,14 @@ const Navbar = () => {
             end
           >
             Inicio
+          </NavLink>
+          <NavLink 
+            to="/plantas" 
+            className={({ isActive }) => 
+              `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+            }
+          >
+            Plantas
           </NavLink>
           <NavLink 
             to="/dashboard" 
@@ -49,7 +53,6 @@ const Navbar = () => {
         </div>
         
         <div className={styles.roleSelector}>
-          <span className={styles.roleLabel}>Rol:</span>
           <select
             className={styles.roleSelect}
             value={role}
@@ -58,7 +61,7 @@ const Navbar = () => {
           >
             {Object.entries(ROLES).map(([key, value]) => (
               <option key={key} value={value}>
-                {value.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                {value.replace('_', ' ')}
               </option>
             ))}
           </select>

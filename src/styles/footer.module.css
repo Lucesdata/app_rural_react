@@ -1,100 +1,161 @@
 /* Footer container */
 .footer {
-  background-color: rgba(255, 255, 255, 0.8);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--color-border);
-  padding: var(--space-6) 0;
-  margin-top: auto; /* Push footer to bottom */
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
+  background: rgba(15, 23, 42, 0.95);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin-top: auto;
 }
 
-.footerContainer {
+/* Container for content */
+.row {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.footerContent {
+  padding: 0 1rem;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  gap: var(--space-6);
+  grid-template-columns: 1fr auto;
   align-items: center;
+  gap: 1rem;
 }
 
-/* Footer sections */
-.footerSection {
+/* Brand section */
+.brand {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
 
-.footerHeading {
-  font-size: var(--fs-lg);
+.brand strong {
   font-weight: 600;
   color: var(--color-text);
-  margin: 0 0 var(--space-2) 0;
 }
 
-.copyright {
-  font-size: var(--fs-sm);
-  color: var(--color-text-muted);
-  margin: 0;
+.tagline {
+  font-size: 0.75rem;
+  color: var(--color-muted);
 }
 
-/* Navigation */
-.footerNav {
+/* Certification section */
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .cert {
+    white-space: normal;
+    font-size: 0.6875rem;
+    line-height: 1.2;
+  }
+  
+  .certText {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .regNumber {
+    font-size: 0.625rem;
+  }
+  
+  .links {
+    justify-content: flex-start;
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+    font-size: 0.6875rem;
+  }
+  
+  .separator {
+    display: none;
+  }
+  
+  .link {
+    padding: 0.25rem 0.375rem;
+  }
+}
+
+.cert {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  white-space: nowrap;
 }
 
-.navList {
+.certBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  color: #0f172a;
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.certText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.regNumber {
+  font-size: 0.6875rem;
+  opacity: 0.8;
+}
+
+/* Navigation links */
+.links {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: var(--space-4);
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  gap: 0.5rem;
+  padding: 0.5rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
 }
 
-.navItem {
-  margin: 0;
-  padding: 0;
-}
-
-.navLink {
-  color: var(--color-text);
+.link {
+  color: var(--color-muted);
   text-decoration: none;
-  font-size: var(--fs-sm);
-  font-weight: 500;
+  font-size: 0.75rem;
   transition: color 0.2s ease;
-  padding: var(--space-1) 0;
-  position: relative;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
 }
 
-.navLink:hover,
-.navLink:focus {
-  color: var(--color-primary);
+.link:hover,
+.link:focus-visible {
+  color: var(--color-accent);
   outline: none;
 }
 
-.navLinkActive {
-  color: var(--color-primary);
-  font-weight: 600;
+.link:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-accent);
 }
 
-.navLinkActive::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--color-primary);
-  border-radius: 2px;
+.linkActive {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.separator {
+  color: var(--color-muted);
+  opacity: 0.5;
+  user-select: none;
 }
 
 /* GitHub link */
