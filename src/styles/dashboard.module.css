@@ -1,12 +1,30 @@
 @import './tokens.css';
 
-/* Estilos base del dashboard */
-.dashboard {
-  padding-top: 80px; /* Ajuste para el navbar fijo */
-  padding-bottom: var(--space-8);
-  min-height: 100vh;
-  background: var(--color-bg);
-  color: var(--color-text);
+/* Page Container */
+.page {
+  max-width: 1180px;
+  margin: 2.5rem auto;
+  padding: 0 1rem 2rem;
+  min-height: calc(100vh - 80px);
+}
+
+/* Dashboard Header */
+.dashboardHeader {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.dashboardHeader h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #eef6fb;
+  margin: 0 0 0.5rem 0;
+}
+
+.dashboardHeader p {
+  margin: 0;
+  color: #9fb2c1;
+  font-size: 1.1rem;
 }
 
 /* Encabezado */
@@ -42,16 +60,77 @@
   margin-bottom: 0;
 }
 
-/* Grid de dos columnas */
-.dashboard .gridTwo {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
+/* --- Panels --- */
+.panel {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .dashboard .gridTwo {
+.panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.panelHeader {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 800;
+  color: #eef6fb;
+  font-size: 1.05rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.panelBody {
+  padding: 1.25rem;
+}
+
+/* Grid Layout */
+.gridTwo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .gridTwo {
     grid-template-columns: 1fr;
+  }
+  
+  .kpiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .page {
+    padding: 0 0.75rem 1.5rem;
   }
 }
 

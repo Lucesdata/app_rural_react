@@ -1,0 +1,36 @@
+/* Layout styles for the application */
+
+/* Navbar height variable - should match the actual Navbar height */
+:root {
+  --nav-h: 64px;
+}
+
+.appContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  flex: 1;
+  padding-top: var(--nav-h); /* Space for fixed Navbar */
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Ensure the body has no margin that could cause unwanted spacing */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Ensure the root element takes full viewport height */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
