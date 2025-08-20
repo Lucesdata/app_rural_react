@@ -1,163 +1,249 @@
-/**
- * Feature: Dashboard
- * This is the Dashboard feature; it contains the main dashboard page with KPIs, alerts, and status overview.
- */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ProgressBar from './components/ProgressBar';
-import AlertItem from './components/AlertItem';
-import StatusCell from './components/StatusCell';
-import styles from '../../styles/dashboard.module.css';
-import uiStyles from '../../styles/ui.module.css';
-import Loading from '../../components/feedback/Loading';
-import Empty from '../../components/feedback/Empty';
-import Error from '../../components/feedback/Error';
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
+  ResponsiveContainer, PieChart, Pie, Cell 
+} from 'recharts';
+import { 
+  FiMenu, FiHome, FiDroplet, FiFileText, FiSettings, 
+  FiBell, FiSearch, FiChevronDown, FiUser, FiUsers, FiZap 
+} from 'react-icons/fi';
+import styles from './dashboard.module.css';
+import plantasData from '../../data/plantas.json';
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [dashboardData, setDashboardData] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Calculate KPI data from plantas.json
+  const totalPlants = plantasData.length;
+  const totalUsers = plantasData.reduce((sum, plant) => sum + (plant.usuarios || 0), 0);
+  const totalPopulation = plantasData.reduce((sum, plant) => sum + (plant.poblacion || 0), 0);
+  const avgCaudalDiseno = (plantasData.reduce((sum, plant) => sum + (plant.caudalDiseno || 0), 0) / totalPlants).toFixed(2);
+  
+  // Colors for charts
+  const COLORS = ['#7e57c2', '#5e35b1', '#9575cd', '#b39ddb', '#d1c4e9'];
+  
+  // KPI data
+  const kpis = [
+    { 
+      title: 'Total Plantas', 
+      value: totalPlants, 
+      icon: <FiDroplet className={styles.kpiIcon} />,
+      trend: '+2',
+      trendPositive: true
+    },
+    { 
+      title: 'Total Usuarios', 
+      value: totalUsers.toLocaleString(), 
+      icon: <FiUsers className={styles.kpiIcon} />,
+      trend: '+5%',
+      trendPositive: true
+    },
+    { 
+      title: 'Población Atendida', 
+      value: totalPopulation.toLocaleString(), 
+      icon: <FiUsers className={styles.kpiIcon} />,
+      trend: '+3%',
+      trendPositive: true
+    },
+    { 
+      title: 'Caudal Promedio', 
+      value: avgCaudalDiseno, 
+      unit: ' L/s',
+      icon: <FiZap className={styles.kpiIcon} />,
+      trend: '0%',
+      trendPositive: true
+    }
+  ];
 
-  // Datos mock para el dashboard
-  const mockData = {
-    kpis: [
-      { title: 'Plantas Activas', value: '12', trend: '+2', trendPositive: true },
-      { title: 'Alertas Hoy', value: '3', trend: '-1', trendPositive: false },
-      { title: 'Consumo Promedio', value: '1.2M', unit: 'L', trend: '0%', trendPositive: true },
-      { title: 'Eficiencia', value: '92%', trend: '+2%', trendPositive: true },
-    ],
-    alerts: [
-      { time: '10:30', message: 'Alta demanda en Planta Norte', severity: 'warning' },
-      { time: '09:15', message: 'Nivel de cloro bajo en Planta Sur', severity: 'danger' },
-      { time: '08:45', message: 'Actualización de firmware completada', severity: 'info' },
-    ],
-    plants: [
-      { id: 1, name: 'Planta Norte', status: 'normal', lastUpdate: 'Hace 5 min' },
-      { id: 2, name: 'Planta Sur', status: 'warning', lastUpdate: 'Hace 15 min' },
-      { id: 3, name: 'Planta Este', status: 'normal', lastUpdate: 'Hace 2 min' },
-      { id: 4, name: 'Planta Oeste', status: 'danger', lastUpdate: 'Hace 1 hora' },
-    ]
-  };
-
-  useEffect(() => {
-    // Simular carga de datos
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // Simular retraso de red
-        await new Promise(resolve => setTimeout(resolve, 800));
-        setDashboardData(mockData);
-        setError(null);
-      } catch (err) {
-        console.error('Error loading dashboard data:', err);
-        setError('No se pudieron cargar los datos del dashboard');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) return <Loading />;
-  if (error) return <Error message={error} onRetry={() => window.location.reload()} />;
-  if (!dashboardData) return <Empty message="No hay datos disponibles" />;
+  // Toggle sidebar
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
   return (
-    <div className={styles.dashboard}>
-      <header className={styles.dashboardHeader}>
-        <h1>Panel de Control</h1>
-        <p>Vista general del sistema de monitoreo</p>
-      </header>
-
-      {/* Sección de KPIs */}
-      <section className={styles.kpiSection}>
-        <h2>Resumen General</h2>
-        <div className={styles.kpiGrid}>
-          {dashboardData.kpis.map((kpi, index) => (
-            <div key={index} className={styles.kpiCard}>
-              <div className={styles.kpiValue}>
-                {kpi.value} {kpi.unit && <span className={styles.kpiUnit}>{kpi.unit}</span>}
-              </div>
-              <div className={styles.kpiTitle}>{kpi.title}</div>
-              <div className={`${styles.kpiTrend} ${kpi.trendPositive ? styles.positive : styles.negative}`}>
-                {kpi.trend}
-              </div>
-            </div>
-          ))}
+    <div className={styles.dashboardContainer}>
+      {/* Sidebar */}
+      <aside className={`${styles.sidebar} ${sidebarOpen ? '' : styles.sidebarCollapsed}`}>
+        <div className={styles.logo}>
+          <FiDroplet className={styles.logoIcon} />
+          {sidebarOpen && <span>AquaTrack</span>}
         </div>
-      </section>
+        
+        <nav className={styles.nav}>
+          <Link to="/dashboard" className={`${styles.navItem} ${styles.navItemActive}`}>
+            <FiHome className={styles.navIcon} />
+            {sidebarOpen && <span className={styles.navText}>Dashboard</span>}
+          </Link>
+          <Link to="/plantas" className={styles.navItem}>
+            <FiDroplet className={styles.navIcon} />
+            {sidebarOpen && <span className={styles.navText}>Plantas</span>}
+          </Link>
+          <Link to="/reportes" className={styles.navItem}>
+            <FiFileText className={styles.navIcon} />
+            {sidebarOpen && <span className={styles.navText}>Reportes</span>}
+          </Link>
+          <Link to="/configuracion" className={styles.navItem}>
+            <FiSettings className={styles.navIcon} />
+            {sidebarOpen && <span className={styles.navText}>Configuración</span>}
+          </Link>
+        </nav>
+      </aside>
 
-      <div className={styles.dashboardContent}>
-        {/* Sección de Alertas */}
-        <section className={styles.alertsSection}>
-          <div className={styles.sectionHeader}>
-            <h2>Alertas Recientes</h2>
-            <Link to="/alertas" className={styles.viewAllLink}>Ver todas</Link>
+      {/* Main Content */}
+      <div className={`${styles.mainContent} ${!sidebarOpen ? styles.mainContentExpanded : ''}`}>
+        {/* Header */}
+        <header className={styles.header}>
+          <div className={styles.headerLeft}>
+            <button 
+              className={styles.menuButton} 
+              onClick={toggleSidebar}
+              aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+            >
+              <FiMenu />
+            </button>
+            <h1 className={styles.pageTitle}>Dashboard</h1>
           </div>
-          <div className={styles.alertsList}>
-            {dashboardData.alerts.map((alert, index) => (
-              <AlertItem 
-                key={index}
-                time={alert.time}
-                message={alert.message}
-                severity={alert.severity}
+          
+          <div className={styles.headerActions}>
+            <div className={styles.searchBar}>
+              <FiSearch className={styles.searchIcon} />
+              <input 
+                type="text" 
+                className={styles.searchInput} 
+                placeholder="Buscar..." 
+                aria-label="Buscar"
               />
-            ))}
+            </div>
+            
+            <button className={styles.notificationButton} aria-label="Notificaciones">
+              <FiBell />
+              <span className={styles.notificationBadge}>3</span>
+            </button>
+            
+            <div className={styles.userInfo} onClick={toggleMobileMenu}>
+              <div className={styles.avatar}>DG</div>
+              {!sidebarOpen && (
+                <div className={styles.userDetails}>
+                  <span className={styles.userName}>David Grey H</span>
+                  <span className={styles.userRole}>Project Manager</span>
+                </div>
+              )}
+              <FiChevronDown className={styles.dropdownIcon} />
+            </div>
           </div>
-        </section>
+        </header>
 
-        {/* Sección de Plantas */}
-        <section className={styles.plantsSection}>
-          <div className={styles.sectionHeader}>
-            <h2>Estado de Plantas</h2>
-            <Link to="/plantas" className={styles.viewAllLink}>Ver todas</Link>
-          </div>
-          <div className={styles.plantsGrid}>
-            {dashboardData.plants.map((plant) => (
-              <Link to={`/plantas/${plant.id}`} key={plant.id} className={styles.plantCard}>
-                <div className={styles.plantHeader}>
-                  <h3>{plant.name}</h3>
-                  <StatusCell status={plant.status} />
+        {/* Dashboard Content */}
+        <main className={styles.dashboardContent}>
+          {/* KPI Cards */}
+          <div className={styles.kpiGrid}>
+            {kpis.map((kpi, index) => (
+              <div key={index} className={styles.kpiCard}>
+                <div className={styles.kpiIconContainer}>
+                  {kpi.icon}
                 </div>
-                <div className={styles.plantDetails}>
-                  <div className={styles.plantDetail}>
-                    <span className={styles.detailLabel}>Estado:</span>
-                    <span className={styles.detailValue}>
-                      {plant.status === 'normal' ? 'Operativo' : 
-                       plant.status === 'warning' ? 'En advertencia' : 'Crítico'}
-                    </span>
+                <div className={styles.kpiContent}>
+                  <div className={styles.kpiValue}>
+                    {kpi.value}
+                    {kpi.unit && <span className={styles.kpiUnit}>{kpi.unit}</span>}
                   </div>
-                  <div className={styles.plantDetail}>
-                    <span className={styles.detailLabel}>Última actualización:</span>
-                    <span className={styles.detailValue}>{plant.lastUpdate}</span>
+                  <div className={styles.kpiLabel}>{kpi.title}</div>
+                  <div className={`${styles.kpiTrend} ${kpi.trendPositive ? styles.trendUp : styles.trendDown}`}>
+                    {kpi.trend}
                   </div>
                 </div>
-                <div className={styles.viewDetails}>Ver detalles →</div>
-              </Link>
+              </div>
             ))}
           </div>
-        </section>
+          
+          {/* Charts Section */}
+          <div className={styles.chartsSection}>
+            <div className={styles.chartCard}>
+              <div className={styles.chartHeader}>
+                <h2 className={styles.chartTitle}>Caudal Diseño vs. Concesión</h2>
+                <div className={styles.chartLegend}>
+                  <div className={styles.legendItem}>
+                    <div className={`${styles.legendColor} ${styles.purple}`}></div>
+                    <span>Caudal Diseño</span>
+                  </div>
+                  <div className={styles.legendItem}>
+                    <div className={`${styles.legendColor} ${styles.teal}`}></div>
+                    <span>Caudal Concesión</span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.chartContainer}>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={plantasData.slice(0, 5).map(plant => ({
+                      name: plant.planta.split(' ').pop(),
+                      caudalDiseno: plant.caudalDiseno || 0,
+                      caudalConcesion: plant.caudalConcesion || 0
+                    }))}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="caudalDiseno" fill="#7e57c2" name="Caudal Diseño" />
+                    <Bar dataKey="caudalConcesion" fill="#4db6ac" name="Caudal Concesión" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            
+            <div className={styles.chartCard}>
+              <div className={styles.chartHeader}>
+                <h2 className={styles.chartTitle}>Distribución por Tipo de Planta</h2>
+              </div>
+              <div className={styles.chartContainer}>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={Object.entries(
+                        plantasData.reduce((acc, plant) => {
+                          const type = plant.tipoPlanta || 'Sin especificar';
+                          acc[type] = (acc[type] || 0) + 1;
+                          return acc;
+                        }, {})
+                      ).map(([name, value]) => ({
+                        name,
+                        value,
+                        percentage: Math.round((value / totalPlants) * 100)
+                      }))}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ name, percentage }) => `${name}: ${percentage}%`}
+                    >
+                      {Object.entries(
+                        plantasData.reduce((acc, plant) => {
+                          const type = plant.tipoPlanta || 'Sin especificar';
+                          acc[type] = (acc[type] || 0) + 1;
+                          return acc;
+                        }, {})
+                      ).map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value, name, props) => [
+                      `${props.payload.percentage}% (${value} ${value === 1 ? 'planta' : 'plantas'})`,
+                      name
+                    ]} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+          
+        </main>
       </div>
-
-      {/* Sección de Gráficos */}
-      <section className={styles.chartsSection}>
-        <h2>Métricas Clave</h2>
-        <div className={styles.chartsGrid}>
-          <div className={styles.chartContainer}>
-            <h3>Consumo de Agua (7 días)</h3>
-            <div className={styles.chartPlaceholder}>
-              <p>Gráfico de consumo de agua</p>
-            </div>
-          </div>
-          <div className={styles.chartContainer}>
-            <h3>Calidad del Agua</h3>
-            <div className={styles.chartPlaceholder}>
-              <p>Métricas de calidad</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

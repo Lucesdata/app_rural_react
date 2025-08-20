@@ -1,182 +1,163 @@
-/**
- * Feature: Plantas
- * This is the Plantas feature; it contains the plants listing page with filtering and search functionality.
- */
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { getFilteredPlants, getFuenteOptions } from '../../lib/apiClient';
-import PlantCard from './components/PlantCard';
-import Filters from './components/Filters';
-import Pagination from './components/Pagination';
-import Loading from '../../components/feedback/Loading';
-import Empty from '../../components/feedback/Empty';
-import Error from '../../components/feedback/Error';
-import styles from '../../styles/plantas.module.css';
+import React, { useMemo, useState } from "react";
+import plantasRaw from "@data/plantas.json";
+import styles from "./plantas.module.css";
 
-const Plantas = () => {
-  const [plants, setPlants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFuente, setSelectedFuente] = useState('');
-  const [fuenteOptions, setFuenteOptions] = useState([]);
-  const [sortOrder, setSortOrder] = useState('desc');
-  const [pageSize, setPageSize] = useState(9); // 9, 18, or 0 (all)
-  const [currentPage, setCurrentPage] = useState(1);
+function toNumber(v) {
+  if (v === null || v === undefined) return null;
+  const s = String(v).replace(",", ".");
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
 
-  // Cargar opciones de filtro
-  useEffect(() => {
-    const loadFuenteOptions = async () => {
-      try {
-        const options = await getFuenteOptions();
-        setFuenteOptions(options);
-      } catch (err) {
-        console.error('Error loading fuente options:', err);
-      }
-    };
-
-    loadFuenteOptions();
-  }, []);
-
-  // Cargar y filtrar plantas
-  useEffect(() => {
-    const loadPlants = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        const filteredPlants = await getFilteredPlants({
-          search: searchTerm,
-          fuente: selectedFuente,
-          sortBy: 'usuarios',
-          sortOrder: sortOrder
-        });
-        setPlants(filteredPlants);
-        // Reset to first page when filters change
-        setCurrentPage(1);
-      } catch (err) {
-        console.error('Error loading plants:', err);
-        setError('No se pudieron cargar las plantas. Por favor, intente de nuevo más tarde.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const debounceTimer = setTimeout(() => {
-      loadPlants();
-    }, 300);
-
-    return () => clearTimeout(debounceTimer);
-  }, [searchTerm, selectedFuente, sortOrder]);
-
-  // Resetear a la primera página cuando cambian los filtros
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedFuente, sortOrder, pageSize]);
-
-  // Manejar cambio de página
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function normalizePlant(p) {
+  return {
+    id: String(p.id ?? p.planta ?? ""),
+    planta: p.planta ?? p.nombre ?? "Planta",
+    nombre: p.nombre ?? p.planta ?? "",
+    vereda: p.vereda ?? "",
+    corregimiento: p.corregimiento ?? "",
+    fuente: p.fuente ?? "",
+    tipoAgua: p.tipoAgua ?? p["tipoAgua"] ?? "",
+    tipoPlanta: p.tipoPlanta ?? "",
+    conduccion: p.conduccion ?? "",
+    tanqueAbastec: p.tanqueAbastec ?? p["tanqueAbastec."] ?? "",
+    desarenador: p.desarenador ?? "",
+    desinfeccion: p.desinfeccion ?? "",
+    caudalDiseno: toNumber(p.caudaDiseño ?? p.caudalDiseño),
+    caudalConcesion: toNumber(p.caudalConcesion ?? p["caudalConcesion "]),
+    usuarios: toNumber(p.usuarios),
+    poblacion: toNumber(p.poblacion ?? p["Población"]),
+    lat: toNumber(p.lat ?? p.latitud),
+    lng: toNumber(p.lng ?? p.longitud),
   };
+}
 
-  // Reiniciar todos los filtros
-  const resetFilters = () => {
-    setSearchTerm('');
-    setSelectedFuente('');
-    setSortOrder('desc');
-    setPageSize(9);
-    setCurrentPage(1);
-  };
+export default function Plantas() {
+  const [selectedId, setSelectedId] = useState("");
 
-  // Calcular plantas paginadas
-  const paginatedPlants = useMemo(() => {
-    const filtered = plants.filter(plant => {
-      const matchesSearch = plant.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         plant.ubicacion.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesFuente = !selectedFuente || plant.fuente === selectedFuente;
-      return matchesSearch && matchesFuente;
-    });
+  const plantas = useMemo(() => plantasRaw.map(normalizePlant), []);
+  const selected = useMemo(() => plantas.find(p => p.id === selectedId), [plantas, selectedId]);
 
-    // Ordenar
-    const sorted = [...filtered].sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.usuarios - b.usuarios;
-      }
-      return b.usuarios - a.usuarios;
-    });
-
-    // Paginar
-    if (pageSize === 0) return sorted; // Mostrar todo
-    const startIndex = (currentPage - 1) * pageSize;
-    return sorted.slice(startIndex, startIndex + pageSize);
-  }, [plants, searchTerm, selectedFuente, sortOrder, pageSize, currentPage]);
-
-  // Calcular total de páginas
-  const totalPages = useMemo(() => {
-    if (pageSize === 0) return 1;
-    const filtered = plants.filter(plant => {
-      const matchesSearch = plant.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         plant.ubicacion.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesFuente = !selectedFuente || plant.fuente === selectedFuente;
-      return matchesSearch && matchesFuente;
-    });
-    return Math.ceil(filtered.length / pageSize);
-  }, [plants, searchTerm, selectedFuente, pageSize]);
-
-  if (loading) return <Loading />;
-  if (error) return <Error message={error} onRetry={() => window.location.reload()} />;
-  if (paginatedPlants.length === 0) return <Empty message="No se encontraron plantas que coincidan con los filtros" />;
+  function fmtInt(n) { return n == null ? "—" : n.toLocaleString("es-CO"); }
+  function fmtFloat(n) { return n == null ? "—" : n.toLocaleString("es-CO", { maximumFractionDigits: 2 }); }
+  const mapHref = selected?.lat != null && selected?.lng != null
+    ? `https://www.google.com/maps?q=${selected.lat},${selected.lng}`
+    : null;
 
   return (
-    <div className={styles.plantasContainer}>
-      <header className={styles.header}>
-        <h1>Plantas de Tratamiento</h1>
-        <p>Gestiona y monitorea las plantas de tratamiento de agua</p>
-      </header>
+    <div className={styles.wrapper}>
+      <h1 className={styles.title}>Selecciona una planta</h1>
 
-      {/* Filtros y búsqueda */}
-      <Filters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedFuente={selectedFuente}
-        setSelectedFuente={setSelectedFuente}
-        fuenteOptions={fuenteOptions}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        onReset={resetFilters}
-      />
-
-      {/* Resultados */}
-      <div className={styles.plantasGrid}>
-        {paginatedPlants.map((plant) => (
-          <PlantCard
-            key={plant.id}
-            id={plant.id}
-            nombre={plant.nombre}
-            fuente={plant.fuente}
-            ubicacion={plant.ubicacion}
-            usuarios={plant.usuarios}
-            estado={plant.estado}
-            ultimaLectura={plant.ultima_lectura}
-          />
+      <label htmlFor="plant-select" className={styles.label}>
+        Planta
+      </label>
+      <select
+        id="plant-select"
+        value={selectedId}
+        onChange={(e) => setSelectedId(e.target.value)}
+        className={styles.dropdown}
+        aria-label="Seleccionar planta"
+      >
+        <option value="">— Selecciona —</option>
+        {plantas.map((p) => (
+          <option key={p.id} value={p.id}>
+            {p.planta}
+          </option>
         ))}
-      </div>
+      </select>
 
-      {/* Paginación */}
-      {pageSize > 0 && totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          showAll={pageSize === 0}
-          totalItems={plants.length}
-          pageSize={pageSize}
-        />
+      {!selected && (
+        <section className={styles.empty} aria-live="polite">
+          <div className={styles.emptyIcon} aria-hidden="true">💧</div>
+          <h2 className={styles.emptyTitle}>Explora plantas de agua potable</h2>
+          <p className={styles.emptyHint}>Usa el selector de arriba para ver detalles de una planta.</p>
+        </section>
+      )}
+
+      {selected && (
+        <article className={styles.card} role="region" aria-label={`Planta ${selected.planta}`}>
+          <header className={styles.header}>
+            <h2 className={styles.cardTitle}>{selected.planta}</h2>
+            {mapHref && (
+              <a className={styles.mapLink} href={mapHref} target="_blank" rel="noreferrer">
+                📍 Ver en mapa
+              </a>
+            )}
+          </header>
+
+          <div className={styles.meta}>
+            {selected.vereda && (
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>Vereda</span>
+                <span className={styles.metaValue}>{selected.vereda}</span>
+              </div>
+            )}
+            {selected.corregimiento && (
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>Corregimiento</span>
+                <span className={styles.metaValue}>{selected.corregimiento}</span>
+              </div>
+            )}
+            {selected.fuente && (
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>Fuente</span>
+                <span className={styles.metaValue}>{selected.fuente}</span>
+              </div>
+            )}
+          </div>
+
+          <div className={styles.kpis}>
+            <div className={styles.kpiItem} aria-label="Usuarios">
+              <span className={styles.icon} aria-hidden="true">👥</span>
+              <span className={styles.kpiText}>{fmtInt(selected.usuarios)} usuarios</span>
+            </div>
+            <div className={styles.kpiItem} aria-label="Población">
+              <span className={styles.icon} aria-hidden="true">🏘️</span>
+              <span className={styles.kpiText}>{fmtInt(selected.poblacion)} población</span>
+            </div>
+            <div className={styles.kpiItem} aria-label="Caudal de diseño">
+              <span className={styles.icon} aria-hidden="true">💧</span>
+              <span className={styles.kpiText}>{fmtFloat(selected.caudalDiseno)} L/s diseño</span>
+            </div>
+            {selected.caudalConcesion != null && (
+              <div className={styles.kpiItem} aria-label="Caudal de concesión">
+                <span className={styles.icon} aria-hidden="true">💧</span>
+                <span className={styles.kpiText}>{fmtFloat(selected.caudalConcesion)} L/s concesión</span>
+              </div>
+            )}
+          </div>
+
+          {Object.values({
+            tipoAgua: selected.tipoAgua,
+            tipoPlanta: selected.tipoPlanta,
+            conduccion: selected.conduccion,
+            tanqueAbastec: selected.tanqueAbastec,
+            desarenador: selected.desarenador,
+            desinfeccion: selected.desinfeccion
+          }).some(Boolean) && (
+            <details className={styles.more}>
+              <summary className={styles.moreSummary}>Ver más detalles</summary>
+              <div className={styles.detailGrid}>
+                {Object.entries({
+                  'Tipo de agua': selected.tipoAgua,
+                  'Tipo de planta': selected.tipoPlanta,
+                  'Conducción': selected.conduccion,
+                  'Tanque': selected.tanqueAbastec,
+                  'Desarenador': selected.desarenador,
+                  'Desinfección': selected.desinfeccion
+                })
+                .filter(([, value]) => Boolean(value))
+                .map(([label, value]) => (
+                  <div key={label} className={styles.badge}>
+                    <span>{label}</span>
+                    <strong>{String(value)}</strong>
+                  </div>
+                ))}
+              </div>
+            </details>
+          )}
+        </article>
       )}
     </div>
   );
-};
-
-export default Plantas;
+}
