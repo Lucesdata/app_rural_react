@@ -7,7 +7,7 @@ import plantasData from '../../data/plantas.json';
 const normalizePlantasData = (data) => {
   return data.map(planta => ({
     ...planta,
-    caudalDiseño: parseFloat((planta.caudalDiseño || planta.caudaDiseño || 0).toString().replace(',', '.')) || 0,
+    caudalDiseño: parseFloat((planta.caudalDiseño || planta.caudalDiseno || planta.caudaDiseño || planta.caudalDiseno || 0).toString().replace(',', '.')) || 0,
     usuarios: parseInt(planta.usuarios || 0, 10) || 0
   }));
 };
@@ -19,88 +19,44 @@ const shortName = (name = '') => {
 
 const formatNumber = (num) => new Intl.NumberFormat('es-CO').format(num);
 
-// Stat Card Component
-const StatCard = ({ title, value, unit, description = '', color = '#38bdf8' }) => (
-  <div className={styles.statCard}>
-    <div className={styles.statTitle}>{title}</div>
-    <div className={styles.statValue} style={{ color }}>{value}</div>
-    <div className={styles.statUnit}>
-      {unit} {description && <span className={styles.statDescription}>{description}</span>}
-    </div>
-  </div>
-);
-
-// Filter Select Component
-const FilterSelect = ({ id, label, value, onChange, options, placeholder }) => (
-  <div className={styles.filterGroup}>
-    <label htmlFor={id} className={styles.filterLabel}>{label}</label>
-    <select
-      id={id}
-      value={value}
-      onChange={onChange}
-      className={styles.filterSelect}
-    >
-      <option value="">{placeholder}</option>
-      {options.map(option => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-);
-
-// Main Dashboard Component
-const Dashboard = () => {
-  // Normalize data
+export default function Dashboard() {
+  // Normalizar datos
   const normalizedData = useMemo(() => normalizePlantasData(plantasData), []);
-  
-  // Filter state
-  const [filters, setFilters] = useState({
-    corregimiento: '',
-    fuente: ''
-  });
 
-  // Get unique filter options
+  // Estado de filtros
+  const [filters, setFilters] = useState({ corregimiento: '', fuente: '' });
+
+  // Opciones únicas para filtros
   const filterOptions = useMemo(() => ({
     corregimiento: ['', ...new Set(normalizedData.map(p => p.corregimiento).filter(Boolean))].sort(),
     fuente: ['', ...new Set(normalizedData.map(p => p.fuente).filter(Boolean))].sort()
   }), [normalizedData]);
 
-  // Apply filters to data
-  const filteredData = useMemo(() => 
-    normalizedData.filter(planta => 
+  // Aplicar filtros
+  const filteredData = useMemo(() =>
+    normalizedData.filter(planta =>
       (!filters.corregimiento || planta.corregimiento === filters.corregimiento) &&
       (!filters.fuente || planta.fuente === filters.fuente)
     ),
     [normalizedData, filters]
   );
 
-  // Debug log to check filtered data
-  console.log('Filtered Data:', filteredData);
-  
-  // Prepare chart data
+  // Datos para gráficos
   const chartData = useMemo(() => {
-    // Sort by usuarios (descending) and limit to top 10 if many plants
-    const sortedData = [...filteredData]
-      .sort((a, b) => (b.usuarios || 0) - (a.usuarios || 0));
-    
+    const sortedData = [...filteredData].sort((a, b) => (b.usuarios || 0) - (a.usuarios || 0));
     const isTop10 = sortedData.length > 10;
     const displayData = isTop10 ? sortedData.slice(0, 10) : sortedData;
-    
     return {
       data: displayData,
       isTop10
     };
   }, [filteredData]);
 
-  // Calculate KPI stats
+  // KPIs
   const stats = useMemo(() => {
     const caudales = filteredData.map(p => p.caudalDiseño).filter(Boolean);
     const totalFlow = caudales.reduce((sum, val) => sum + val, 0);
     const avgFlow = caudales.length > 0 ? totalFlow / caudales.length : 0;
-    
-    // Find max flow and corresponding plant
     let maxFlow = { value: 0, planta: '' };
     filteredData.forEach(planta => {
       if (planta.caudalDiseño > maxFlow.value) {
@@ -110,7 +66,6 @@ const Dashboard = () => {
         };
       }
     });
-
     return {
       totalFlow,
       avgFlow,
@@ -118,7 +73,7 @@ const Dashboard = () => {
     };
   }, [filteredData]);
 
-  // Filter change handler
+  // Manejador de filtros
   const handleFilterChange = (filterType) => (e) => {
     setFilters(prev => ({
       ...prev,
@@ -129,30 +84,40 @@ const Dashboard = () => {
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Dashboard</h1>
-      
-      {/* Filter Bar */}
+
+      {/* Filtros */}
       <div className={styles.filtersContainer}>
-        <FilterSelect
-          id="corregimiento-filter"
-          label="Corregimiento"
-          value={filters.corregimiento}
-          onChange={handleFilterChange('corregimiento')}
-          options={filterOptions.corregimiento}
-          placeholder="Todos los corregimientos"
-        />
-        <FilterSelect
-          id="fuente-filter"
-          label="Fuente"
-          value={filters.fuente}
-          onChange={handleFilterChange('fuente')}
-          options={filterOptions.fuente}
-          placeholder="Todas las fuentes"
-        />
+        <div className={styles.filterGroup}>
+          <label htmlFor="corregimiento-filter" className={styles.filterLabel}>Corregimiento</label>
+          <select
+            id="corregimiento-filter"
+            value={filters.corregimiento}
+            onChange={handleFilterChange('corregimiento')}
+            className={styles.filterSelect}
+          >
+            {filterOptions.corregimiento.map(option => (
+              <option key={option} value={option}>{option || 'Todos los corregimientos'}</option>
+            ))}
+          </select>
+        </div>
+        <div className={styles.filterGroup}>
+          <label htmlFor="fuente-filter" className={styles.filterLabel}>Fuente</label>
+          <select
+            id="fuente-filter"
+            value={filters.fuente}
+            onChange={handleFilterChange('fuente')}
+            className={styles.filterSelect}
+          >
+            {filterOptions.fuente.map(option => (
+              <option key={option} value={option}>{option || 'Todas las fuentes'}</option>
+            ))}
+          </select>
+        </div>
       </div>
-      
-      {/* KPIs Row */}
+
+      {/* KPIs */}
       <div className={styles.kpisRow}>
-        {/* Total Flow KPI */}
+        {/* Caudal Total */}
         <div className={styles.kpiCard}>
           <div className={styles.kpiValue}>
             {formatNumber(stats.totalFlow.toFixed(1))} <span className={styles.kpiUnit}>L/s</span>
@@ -162,8 +127,7 @@ const Dashboard = () => {
             {filteredData.length} {filteredData.length === 1 ? 'planta' : 'plantas'}
           </div>
         </div>
-
-        {/* Average Flow KPI */}
+        {/* Caudal Promedio */}
         <div className={styles.kpiCard}>
           <div className={styles.kpiValue}>
             {filteredData.length > 0 ? stats.avgFlow.toFixed(2) : '0.00'} <span className={styles.kpiUnit}>L/s</span>
@@ -173,8 +137,7 @@ const Dashboard = () => {
             {filteredData.length > 0 ? 'por planta' : 'sin datos'}
           </div>
         </div>
-
-        {/* Max Flow KPI */}
+        {/* Caudal Máximo */}
         <div className={styles.kpiCard}>
           <div className={styles.kpiValue}>
             {stats.maxFlow.value > 0 ? (
@@ -192,9 +155,9 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Charts Row */}
+      {/* Gráficos */}
       <div className={styles.chartsRow}>
-        {/* Caudal por Planta Line Chart */}
+        {/* Caudal por Planta (Línea) */}
         <div className={styles.chartContainer}>
           <h3 className={styles.chartTitle}>Caudal por Planta (L/s)</h3>
           <div className={styles.chartWrapper}>
@@ -239,8 +202,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        
-        {/* Usuarios por Planta Bar Chart */}
+        {/* Usuarios por Planta (Barras) */}
         <div className={styles.chartContainer}>
           <h3 className={styles.chartTitle}>
             Usuarios por Planta
@@ -299,6 +261,4 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}
