@@ -8,13 +8,20 @@
   --border-color: #334155;
   --error: #f87171;
   --transition: all 0.2s ease;
+  --nav-h: 64px;
 }
 
 /* Page container */
 .authPage {
-  min-height: calc(100vh - 64px); /* Account for navbar */
+  min-height: calc(100vh - var(--nav-h)); /* Account for navbar */
+  margin-top: var(--nav-h);
   width: 100vw;
-  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary) 100%);
+  background: radial-gradient(
+    circle at 25% 25%,
+    var(--primary-light) 0%,
+    var(--primary) 50%,
+    var(--bg-dark) 100%
+  );
   display: grid;
   place-items: center;
   padding: 1rem;
