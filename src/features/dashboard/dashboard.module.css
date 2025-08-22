@@ -300,6 +300,14 @@
   opacity: 0.9;
 }
 
+.statDescription {
+  margin-left: 4px;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 400;
+}
+
+
 /* Chart Card */
 .chartCard {
   background: rgba(30, 41, 59, 0.6);
