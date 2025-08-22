@@ -50,7 +50,7 @@ export default function Plantas() {
           <header className={styles.header}>
             <h2 className={styles.cardTitle}>{selected.planta}</h2>
             {mapHref && (
-              <a className={styles.mapLink} href={mapHref} target="_blank" rel="noreferrer">
+              <a className={styles.mapLink} href={mapHref} target="_blank" rel="noreferrer noopener">
                 📍 Ver en mapa
               </a>
             )}
