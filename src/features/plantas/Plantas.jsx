@@ -39,9 +39,17 @@ export default function Plantas() {
 
       {!selected && (
         <section className={styles.empty} aria-live="polite">
-          <div className={styles.emptyIcon} aria-hidden="true">💧</div>
+          <img
+            src="/empty-state.svg"
+            className={styles.emptyIcon}
+            alt=""
+            aria-hidden="true"
+          />
           <h2 className={styles.emptyTitle}>Explora plantas de agua potable</h2>
           <p className={styles.emptyHint}>Usa el selector de arriba para ver detalles de una planta.</p>
+          <a href="/dashboard" className={styles.viewAllButton}>
+            Ver todas las plantas
+          </a>
         </section>
       )}
 
