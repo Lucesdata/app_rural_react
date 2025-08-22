@@ -7,7 +7,7 @@ import plantasData from '../../data/plantas.json';
 const normalizePlantasData = (data) => {
   return data.map(planta => ({
     ...planta,
-    caudalDiseño: parseFloat((planta.caudalDiseño || planta.caudaDiseño || 0).toString().replace(',', '.')) || 0,
+    caudalDiseño: parseFloat((planta.caudalDiseño || planta.caudalDiseno || planta.caudaDiseño || 0).toString().replace(',', '.')) || 0,
     usuarios: parseInt(planta.usuarios || 0, 10) || 0
   }));
 };
