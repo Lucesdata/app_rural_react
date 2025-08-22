@@ -75,13 +75,14 @@ const Acerca = () => {
               <h3>Próximas expansiones</h3>
               <p>Estamos trabajando para ampliar nuestra cobertura a 10 comunidades adicionales para finales del próximo año.</p>
               <div className={styles.progressBar}>
-                <div 
-                  className={styles.progressFill} 
+                <div
+                  className={styles.progressFill}
                   style={{ width: '60%' }}
                   role="progressbar"
                   aria-valuenow={60}
                   aria-valuemin="0"
                   aria-valuemax="100"
+                  aria-label="Porcentaje de comunidades adicionales cubiertas"
                 ></div>
               </div>
               <p className={styles.progressText}>60% de la meta de expansión alcanzada</p>
