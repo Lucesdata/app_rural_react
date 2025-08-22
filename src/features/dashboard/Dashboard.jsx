@@ -62,10 +62,19 @@ const Dashboard = () => {
   });
 
   // Get unique filter options
-  const filterOptions = useMemo(() => ({
-    corregimiento: [...new Set(normalizedData.map(p => p.corregimiento).filter(Boolean))].sort(),
-    fuente: [...new Set(normalizedData.map(p => p.fuente).filter(Boolean))].sort()
-  }), [normalizedData]);
+  const filterOptions = useMemo(() => {
+    const corregimientos = Array.from(
+      new Set(normalizedData.map(p => p.corregimiento))
+    );
+    const fuentes = Array.from(
+      new Set(normalizedData.map(p => p.fuente))
+    );
+
+    return {
+      corregimiento: corregimientos.filter(Boolean).sort(),
+      fuente: fuentes.filter(Boolean).sort()
+    };
+  }, [normalizedData]);
 
   // Apply filters to data
   const filteredData = useMemo(() => 
