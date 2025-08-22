@@ -19,17 +19,6 @@ const shortName = (name = '') => {
 
 const formatNumber = (num) => new Intl.NumberFormat('es-CO').format(num);
 
-// Stat Card Component
-const StatCard = ({ title, value, unit, description = '', color = '#38bdf8' }) => (
-  <div className={styles.statCard}>
-    <div className={styles.statTitle}>{title}</div>
-    <div className={styles.statValue} style={{ color }}>{value}</div>
-    <div className={styles.statUnit}>
-      {unit} {description && <span className={styles.statDescription}>{description}</span>}
-    </div>
-  </div>
-);
-
 // Filter Select Component
 const FilterSelect = ({ id, label, value, onChange, options, placeholder }) => (
   <div className={styles.filterGroup}>
