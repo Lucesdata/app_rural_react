@@ -222,6 +222,12 @@
   font-weight: 500;
 }
 
+/* Auth actions */
+.loginBtn,
+.userMenuWrapper {
+  margin-left: auto;
+}
+
 /* Role Selector */
 .roleSelector {
   margin-left: var(--space-6);
