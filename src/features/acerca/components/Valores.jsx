@@ -2,6 +2,7 @@
  * Valores section for the Acerca page.
  */
 import React from 'react';
+import uiStyles from '../../../styles/ui.module.css';
 import styles from '../../../styles/acerca.module.css';
 
 const valores = [
@@ -12,16 +13,16 @@ const valores = [
 ];
 
 const Valores = () => (
-  <section className={styles.section}>
+  <article className={styles.card}>
     <h2>Nuestros Valores</h2>
-    <div className={styles.chipsContainer}>
-      {valores.map((valor, index) => (
-        <span key={index} className={styles.chip}>
+    <div className={styles.chips}>
+      {valores.map((valor) => (
+        <span key={valor} className={uiStyles.chip}>
           {valor}
         </span>
       ))}
     </div>
-  </section>
+  </article>
 );
 
 export default Valores;
