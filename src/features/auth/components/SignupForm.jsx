@@ -15,7 +15,7 @@ const ROLES = [
 ];
 
 export default function SignupForm() {
-  const { login } = useAuth();
+  const { signIn, signUp } = useAuth();
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('USUARIO');
@@ -47,9 +47,9 @@ export default function SignupForm() {
     setLoading(true);
     setTimeout(() => {
       // Simular registro y login
-      const user = { nombre, email, rol };
-      login(user);
-      localStorage.setItem('app_rural_user', JSON.stringify(user));
+      const user = { name: nombre, email, role: rol };
+      signUp(user);
+      signIn(user);
       navigate('/dashboard', { replace: true });
     }, 700);
   };
