@@ -169,10 +169,11 @@ const PlantDetail = () => {
               <div className={styles.statusCard}>
                 <h4>Tanque de Almacenamiento</h4>
                 <div className={styles.progressContainer}>
-                  <div 
-                    className={styles.progressBar} 
+                  <div
+                    className={styles.progressBar}
                     style={{ width: `${plant.nivel_tanque || 0}%` }}
                     role="progressbar"
+                    aria-label="Nivel del tanque"
                     aria-valuenow={plant.nivel_tanque || 0}
                     aria-valuemin="0"
                     aria-valuemax="100"
