@@ -7,7 +7,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import Loading from '../components/feedback/Loading';
 import AppLayout from '../components/layout/AppLayout';
-import { AuthProvider } from '../features/auth/AuthContext';
+import { AuthProvider } from '../contexts/AuthContext';
 import ProtectedRoute from '../features/auth/ProtectedRoute';
 
 const Home = lazy(() => import('../features/home'));

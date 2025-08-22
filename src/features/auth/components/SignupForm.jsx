@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../AuthContext';
+import React, { useState } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import styles from '../auth.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ const ROLES = [
 ];
 
 export default function SignupForm() {
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('USUARIO');

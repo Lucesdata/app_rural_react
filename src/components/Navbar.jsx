@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../features/auth/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import styles from '../styles/ui.module.css';
 
 const getInitials = (name, email) => {
