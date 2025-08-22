@@ -63,8 +63,8 @@ const Dashboard = () => {
 
   // Get unique filter options
   const filterOptions = useMemo(() => ({
-    corregimiento: ['', ...new Set(normalizedData.map(p => p.corregimiento).filter(Boolean))].sort(),
-    fuente: ['', ...new Set(normalizedData.map(p => p.fuente).filter(Boolean))].sort()
+    corregimiento: [...new Set(normalizedData.map(p => p.corregimiento).filter(Boolean))].sort(),
+    fuente: [...new Set(normalizedData.map(p => p.fuente).filter(Boolean))].sort()
   }), [normalizedData]);
 
   // Apply filters to data
@@ -76,9 +76,6 @@ const Dashboard = () => {
     [normalizedData, filters]
   );
 
-  // Debug log to check filtered data
-  console.log('Filtered Data:', filteredData);
-  
   // Prepare chart data
   const chartData = useMemo(() => {
     // Sort by usuarios (descending) and limit to top 10 if many plants
