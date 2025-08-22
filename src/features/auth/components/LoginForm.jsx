@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../AuthContext';
+import React, { useState } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import styles from '../auth.module.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ function validateEmail(email) {
 }
 
 export default function LoginForm() {
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

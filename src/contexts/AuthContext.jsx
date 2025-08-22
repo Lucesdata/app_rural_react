@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export const ROLES = {
@@ -7,48 +8,68 @@ export const ROLES = {
   ADMIN: 'ADMIN'
 };
 
+const USER_KEY = 'app_rural_user';
 const ROLE_STORAGE_KEY = 'app_rural_user_role';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
   const [role, setRole] = useState(ROLES.USUARIO);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load role from localStorage on initial render
   useEffect(() => {
-    const savedRole = localStorage.getItem(ROLE_STORAGE_KEY);
-    if (savedRole && Object.values(ROLES).includes(savedRole)) {
-      setRole(savedRole);
+    const storedUser = localStorage.getItem(USER_KEY);
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+      if (parsed.role) setRole(parsed.role);
+    } else {
+      const savedRole = localStorage.getItem(ROLE_STORAGE_KEY);
+      if (savedRole && Object.values(ROLES).includes(savedRole)) {
+        setRole(savedRole);
+      }
     }
     setIsInitialized(true);
   }, []);
 
+  const login = ({ email, role = ROLES.USUARIO, name }) => {
+    const userObj = { name: name || email.split('@')[0], email, role };
+    setUser(userObj);
+    setRole(role);
+    localStorage.setItem(USER_KEY, JSON.stringify(userObj));
+    localStorage.setItem(ROLE_STORAGE_KEY, role);
+  };
+
+  const signOut = () => {
+    setUser(null);
+    localStorage.removeItem(USER_KEY);
+  };
+
   const updateRole = (newRole) => {
     if (Object.values(ROLES).includes(newRole)) {
       setRole(newRole);
-      localStorage.setItem(ROLE_STORAGE_KEY, newRole);
+      if (user) {
+        const updated = { ...user, role: newRole };
+        setUser(updated);
+        localStorage.setItem(USER_KEY, JSON.stringify(updated));
+      } else {
+        localStorage.setItem(ROLE_STORAGE_KEY, newRole);
+      }
     }
   };
 
-  // Don't render children until we've loaded the role from localStorage
   if (!isInitialized) {
     return null;
   }
 
   return (
-    <AuthContext.Provider value={{ role, updateRole, ROLES }}>
+    <AuthContext.Provider value={{ user, role, login, signOut, updateRole, ROLES }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
 
 export default AuthContext;
