@@ -9,14 +9,14 @@ import KpiCard from './components/KpiCard';
 import styles from '../../styles/home.module.css';
 import uiStyles from '../../styles/ui.module.css';
 
-const Home = () => {
-  // Datos mock para las tarjetas KPI
-  const kpiData = [
-    { value: '98%', label: 'Calidad OK' },
-    { value: '24/7', label: 'Monitoreo' },
-    { value: '1.2K', label: 'Usuarios' },
-  ];
+// Datos mock para las tarjetas KPI
+const kpiData = [
+  { value: '98%', label: 'Calidad OK' },
+  { value: '24/7', label: 'Monitoreo' },
+  { value: '1.2K', label: 'Usuarios' },
+];
 
+const Home = () => {
   return (
     <div className={styles.hero}>
       <WaveBackground />
@@ -40,9 +40,9 @@ const Home = () => {
           </div>
           
           <div className={styles.kpiRow}>
-            {kpiData.map((kpi, index) => (
-              <KpiCard 
-                key={index}
+            {kpiData.map((kpi) => (
+              <KpiCard
+                key={kpi.label}
                 value={kpi.value}
                 label={kpi.label}
               />
