@@ -34,9 +34,9 @@ const Home = () => {
             <Link to="/dashboard" className={uiStyles.btnPrimary}>
               Ir al Dashboard
             </Link>
-            <button type="button" className={uiStyles.btnGhost}>
+            <Link to="/acerca" className={uiStyles.btnGhost}>
               Conocer más
-            </button>
+            </Link>
           </div>
           
           <div className={styles.kpiRow}>
