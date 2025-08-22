@@ -7,8 +7,14 @@ import { Link } from 'react-router-dom';
 import uiStyles from '../../styles/ui.module.css';
 import styles from '../../styles/acerca.module.css';
 
+const valores = [
+  "Transparencia",
+  "Accesibilidad",
+  "Confiabilidad",
+  "Sostenibilidad"
+];
+
 const Acerca = () => {
-  const valores = ["Transparencia", "Accesibilidad", "Confiabilidad", "Sostenibilidad"];
 
   return (
     <main>
