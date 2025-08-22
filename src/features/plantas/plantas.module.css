@@ -24,8 +24,8 @@
   color: var(--ui-text-muted, #9aa7b2);
 }
 
-/* --- Dropdown --- */
-.dropdown {
+/* --- Search --- */
+.search {
   width: 100%;
   padding: 0.7rem 0.85rem;
   font-size: 1rem;
@@ -33,30 +33,62 @@
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(12, 18, 32, 0.55);
   color: #eaf6ff;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%23a0aec0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.85rem center;
-  background-size: 1rem;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.dropdown:hover {
+.search:hover {
   border-color: rgba(0, 200, 255, 0.35);
 }
 
-.dropdown:focus {
+.search:focus {
   border-color: rgba(0, 200, 255, 0.55);
   background: rgba(20, 28, 46, 0.6);
   box-shadow: 0 0 0 3px rgba(0,200,255,0.15);
   outline: none;
 }
 
-.dropdown option {
-  background: #0c1a2f;
-  color: #e5eef6;
-  padding: 0.5rem;
+/* Grid of plant cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.plantCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.9rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #eaf6ff;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.plantCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+}
+
+.plantCardSelected {
+  border-color: rgba(0, 200, 255, 0.5);
+  background: rgba(0, 128, 255, 0.12);
+}
+
+.plantIcon {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.plantName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.3;
 }
 
 /* --- Empty state --- */

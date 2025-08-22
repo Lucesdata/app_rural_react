@@ -2,11 +2,17 @@ import React, { useMemo, useState } from "react";
 import plantasRaw from "@data/plantas.json";
 import styles from "./plantas.module.css";
 import { normalizePlant } from "./normalizePlant.js";
+import PlantCard from "./PlantCard.jsx";
 
 export default function Plantas() {
   const [selectedId, setSelectedId] = useState("");
+  const [query, setQuery] = useState("");
 
   const plantas = useMemo(() => plantasRaw.map(normalizePlant), []);
+  const filtered = useMemo(
+    () => plantas.filter(p => p.planta.toLowerCase().includes(query.toLowerCase())),
+    [plantas, query]
+  );
   const selected = useMemo(() => plantas.find(p => p.id === selectedId), [plantas, selectedId]);
 
   function fmtInt(n) { return n == null ? "—" : n.toLocaleString("es-CO"); }
@@ -19,23 +25,29 @@ export default function Plantas() {
     <div className={styles.wrapper}>
       <h1 className={styles.title}>Selecciona una planta</h1>
 
-      <label htmlFor="plant-select" className={styles.label}>
-        Planta
+      <label htmlFor="plant-search" className={styles.label}>
+        Buscar planta
       </label>
-      <select
-        id="plant-select"
-        value={selectedId}
-        onChange={(e) => setSelectedId(e.target.value)}
-        className={styles.dropdown}
-        aria-label="Seleccionar planta"
-      >
-        <option value="">— Selecciona —</option>
-        {plantas.map((p) => (
-          <option key={p.id} value={p.id}>
-            {p.planta}
-          </option>
+      <input
+        id="plant-search"
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className={styles.search}
+        placeholder="Escribe para filtrar"
+        aria-label="Buscar planta"
+      />
+
+      <div className={styles.grid}>
+        {filtered.map((p) => (
+          <PlantCard
+            key={p.id}
+            plant={p}
+            onSelect={setSelectedId}
+            isSelected={p.id === selectedId}
+          />
         ))}
-      </select>
+      </div>
 
       {!selected && (
         <section className={styles.empty} aria-live="polite">
@@ -46,7 +58,7 @@ export default function Plantas() {
             aria-hidden="true"
           />
           <h2 className={styles.emptyTitle}>Explora plantas de agua potable</h2>
-          <p className={styles.emptyHint}>Usa el selector de arriba para ver detalles de una planta.</p>
+          <p className={styles.emptyHint}>Usa la búsqueda y selecciona una tarjeta para ver detalles de una planta.</p>
           <a href="/dashboard" className={styles.viewAllButton}>
             Ver todas las plantas
           </a>
