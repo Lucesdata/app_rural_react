@@ -8,7 +8,7 @@ function validateEmail(email) {
 }
 
 export default function LoginForm() {
-  const { login } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,8 +31,7 @@ export default function LoginForm() {
     setTimeout(() => {
       // Simular sign-in
       const user = { email, role: 'user' };
-      login(user);
-      localStorage.setItem('app_rural_user', JSON.stringify(user));
+      signIn(user);
       // Redirigir
       const redirectTo = location.state?.from?.pathname || '/dashboard';
       navigate(redirectTo, { replace: true });

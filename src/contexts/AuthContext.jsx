@@ -33,12 +33,16 @@ export const AuthProvider = ({ children }) => {
     setIsInitialized(true);
   }, []);
 
-  const login = ({ email, role = ROLES.USUARIO, name }) => {
+  const signIn = ({ email, role = ROLES.USUARIO, name }) => {
     const userObj = { name: name || email.split('@')[0], email, role };
     setUser(userObj);
     setRole(role);
     localStorage.setItem(USER_KEY, JSON.stringify(userObj));
     localStorage.setItem(ROLE_STORAGE_KEY, role);
+  };
+
+  const signUp = ({ name, email, role = ROLES.USUARIO }) => {
+    signIn({ email, role, name });
   };
 
   const signOut = () => {
@@ -64,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, role, login, signOut, updateRole, ROLES }}>
+    <AuthContext.Provider value={{ user, role, signIn, signUp, signOut, updateRole, ROLES }}>
       {children}
     </AuthContext.Provider>
   );
