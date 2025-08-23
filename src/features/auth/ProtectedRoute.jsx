@@ -7,8 +7,7 @@ export default function ProtectedRoute({ children, roles }) {
   const location = useLocation();
 
   if (!user) {
-    const redirectTo = encodeURIComponent(location.pathname + location.search);
-    return <Navigate to={`/login?redirectTo=${redirectTo}`} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (roles && !roles.includes(user.role)) {
