@@ -29,6 +29,7 @@ Aplicación web para el monitoreo de calidad de agua potable en zonas rurales.
 
 - Node.js 16+ (recomendado LTS)
 - npm o yarn
+- Node.js 18+ si se desea ejecutar las pruebas con `node --test`
 
 ## Instalación
 
@@ -53,6 +54,11 @@ npm run build
 # o
 yarn build
 ```
+
+## Pruebas
+
+- `npm test` ejecuta [Jest](https://jestjs.io/), compatible con Node.js 16+
+- Para usar el runner integrado de Node (`node --test`), se requiere Node.js 18+
 
 ## Características Implementadas
 
