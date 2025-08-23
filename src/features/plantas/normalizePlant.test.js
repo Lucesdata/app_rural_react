@@ -1,18 +1,19 @@
-import { test } from 'node:test';
-import assert from 'node:assert/strict';
+import { describe, expect, test } from '@jest/globals';
 import { toNumber, normalizePlant } from './normalizePlant.js';
 
-test('toNumber converts strings to numbers and handles commas', () => {
-  assert.equal(toNumber('10'), 10);
-  assert.equal(toNumber('10,5'), 10.5);
-  assert.equal(toNumber('10.5'), 10.5);
-  assert.equal(toNumber(null), null);
-  assert.equal(toNumber(undefined), null);
-  assert.equal(toNumber('abc'), null);
-});
+describe('normalizePlant utilities', () => {
+  test('toNumber converts strings to numbers and handles commas', () => {
+    expect(toNumber('10')).toBe(10);
+    expect(toNumber('10,5')).toBe(10.5);
+    expect(toNumber('10.5')).toBe(10.5);
+    expect(toNumber(null)).toBeNull();
+    expect(toNumber(undefined)).toBeNull();
+    expect(toNumber('abc')).toBeNull();
+  });
 
-test('normalizePlant resolves caudalDiseno from multiple fields', () => {
-  assert.equal(normalizePlant({ caudaDiseño: '1,2' }).caudalDiseno, 1.2);
-  assert.equal(normalizePlant({ caudalDiseño: '2' }).caudalDiseno, 2);
-  assert.equal(normalizePlant({ caudalDiseno: '3' }).caudalDiseno, 3);
+  test('normalizePlant resolves caudalDiseno from multiple fields', () => {
+    expect(normalizePlant({ caudaDiseño: '1,2' }).caudalDiseno).toBe(1.2);
+    expect(normalizePlant({ caudalDiseño: '2' }).caudalDiseno).toBe(2);
+    expect(normalizePlant({ caudalDiseno: '3' }).caudalDiseno).toBe(3);
+  });
 });
