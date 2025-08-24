@@ -1,79 +1,69 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { api } from "../lib/apiClient";
 
-export const ROLES = {
-  USUARIO: 'USUARIO',
-  OPERARIO: 'OPERARIO',
-  PRESIDENTE_JAA: 'PRESIDENTE_JAA',
-  ADMIN: 'ADMIN'
-};
+const AuthCtx = createContext(null);
 
-const USER_KEY = 'app_rural_user';
-const ROLE_STORAGE_KEY = 'app_rural_user_role';
-
-const AuthContext = createContext();
-
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [role, setRole] = useState(ROLES.USUARIO);
-  const [isInitialized, setIsInitialized] = useState(false);
+export function AuthProvider({ children }) {
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [user, setUser] = useState(() => {
+    const raw = localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem(USER_KEY);
-    if (storedUser) {
-      const parsed = JSON.parse(storedUser);
-      setUser(parsed);
-      if (parsed.role) setRole(parsed.role);
-    } else {
-      const savedRole = localStorage.getItem(ROLE_STORAGE_KEY);
-      if (savedRole && Object.values(ROLES).includes(savedRole)) {
-        setRole(savedRole);
-      }
-    }
-    setIsInitialized(true);
+    const handler = () => logout();
+    window.addEventListener("auth:unauthorized", handler);
+    return () => window.removeEventListener("auth:unauthorized", handler);
   }, []);
 
-  const signIn = ({ email, role = ROLES.USUARIO, name }) => {
-    const userObj = { name: name || email.split('@')[0], email, role };
-    setUser(userObj);
-    setRole(role);
-    localStorage.setItem(USER_KEY, JSON.stringify(userObj));
-    localStorage.setItem(ROLE_STORAGE_KEY, role);
-  };
+  useEffect(() => {
+    if (!token) return;
+    // refresca perfil por si el token cambió
+    (async () => {
+      try {
+        const me = await api("/me");
+        setUser(me);
+        localStorage.setItem("user", JSON.stringify(me));
+      } catch { /* token inválido */ }
+    })();
+  }, [token]);
 
-  const signUp = ({ name, email, role = ROLES.USUARIO }) => {
-    signIn({ email, role, name });
-  };
-
-  const signOut = () => {
-    setUser(null);
-    localStorage.removeItem(USER_KEY);
-  };
-
-  const updateRole = (newRole) => {
-    if (Object.values(ROLES).includes(newRole)) {
-      setRole(newRole);
-      if (user) {
-        const updated = { ...user, role: newRole };
-        setUser(updated);
-        localStorage.setItem(USER_KEY, JSON.stringify(updated));
-      } else {
-        localStorage.setItem(ROLE_STORAGE_KEY, newRole);
-      }
+  async function login(email, password) {
+    setLoading(true);
+    try {
+      const { token: t, user: u } = await api("/auth/login", {
+        method: "POST",
+        body: { email, password },
+        auth: false,
+      });
+      localStorage.setItem("token", t);
+      localStorage.setItem("user", JSON.stringify(u));
+      setToken(t);
+      setUser(u);
+      return u;
+    } finally {
+      setLoading(false);
     }
-  };
-
-  if (!isInitialized) {
-    return null;
   }
 
-  return (
-    <AuthContext.Provider value={{ user, role, signIn, signUp, signOut, updateRole, ROLES }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setToken(null);
+    setUser(null);
+  }
 
-export const useAuth = () => useContext(AuthContext);
+  const value = useMemo(() => ({
+    user, token, loading, login, logout, isAuthenticated: !!token,
+    hasRole: (roles) => !!user && roles.includes(user.role),
+  }), [user, token, loading]);
 
-export default AuthContext;
+  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthCtx);
+  if (!ctx) throw new Error("useAuth must be used within <AuthProvider>");
+  return ctx;
+}

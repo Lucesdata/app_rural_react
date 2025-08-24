@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  OPERARIO
+  USUARIO
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String   // hash luego con bcrypt/argon2
+  role      Role     @default(USUARIO)
+  createdAt DateTime @default(now())
+}
+
+model Planta {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  ubicacion String
+  tipo      String
+  createdAt DateTime @default(now())
+}

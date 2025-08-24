@@ -1,52 +1,46 @@
-/**
- * Router Configuration
- * Centralized routing configuration with code splitting using React.lazy and Suspense.
- * Uses BrowserRouter for consistent routing in development and production.
- */
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
-import Loading from '../components/feedback/Loading';
-import AppLayout from '../components/layout/AppLayout';
-import { AuthProvider } from '../contexts/AuthContext';
-import ProtectedRoute from '../features/auth/ProtectedRoute';
+import { createBrowserRouter } from 'react-router-dom';
+import { ProtectedRoute } from './components';
 
-const Home = lazy(() => import('../features/home'));
-const Dashboard = lazy(() => import('../features/dashboard'));
-const Plantas = lazy(() => import('../features/plantas'));
-const PlantDetail = lazy(() => import('../features/plantas/detail'));
-const Acerca = lazy(() => import('../features/acerca'));
-const AuthPage = lazy(() => import('../features/auth'));
+// Import lazy-loaded components
+import TestApp from './lazy/TestApp';
+import LoginPage from './lazy/LoginPage';
+import PlantasPage from './lazy/PlantasPage';
+import AdminPage from './lazy/AdminPage';
 
-const AppRoutes = () => (
-  <Routes>
-    <Route path="/login" element={<AuthPage />} />
-    <Route element={<AppLayout><Outlet /></AppLayout>}>
-      <Route path="/" element={<Home />} />
-      <Route path="/plantas" element={<Plantas />} />
-      <Route path="/plantas/:id" element={
+// Create router configuration
+const createRouter = () => {
+  return createBrowserRouter([
+    {
+      path: '/',
+      element: <TestApp />
+    },
+    {
+      path: '/login',
+      element: <LoginPage />
+    },
+    {
+      path: '/plantas',
+      element: (
         <ProtectedRoute>
-          <PlantDetail />
+          <PlantasPage />
         </ProtectedRoute>
-      } />
-      <Route path="/dashboard" element={
-        <ProtectedRoute>
-          <Dashboard />
+      )
+    },
+    {
+      path: '/admin',
+      element: (
+        <ProtectedRoute roles={['ADMIN']}>
+          <AdminPage />
         </ProtectedRoute>
-      } />
-      <Route path="/acerca" element={<Acerca />} />
-      <Route path="*" element={<Home />} />
-    </Route>
-  </Routes>
-);
+      )
+    },
+    {
+      path: '*',
+      element: <TestApp />
+    }
+  ]);
+};
 
-const AppRouter = () => (
-  <AuthProvider>
-    <BrowserRouter>
-      <Suspense fallback={<Loading />}>
-        <AppRoutes />
-      </Suspense>
-    </BrowserRouter>
-  </AuthProvider>
-);
+const router = createRouter();
 
-export default AppRouter;
+export default router;
