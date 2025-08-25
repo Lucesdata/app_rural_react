@@ -186,7 +186,7 @@ export default function PlantasPage() {
                 <p style={{ margin: '0.25rem 0', color: '#4b5563' }}>📍 {planta.ubicacion}</p>
                 <p style={{ margin: '0.25rem 0', color: '#4b5563' }}>🔧 {planta.tipo}</p>
                 
-                {hasAnyRole(['ADMIN', 'OPERARIO']) && (
+                {hasAnyRole(['ADMIN']) && (
                   <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
                     <button
                       onClick={() => handleDelete(planta.id)}
