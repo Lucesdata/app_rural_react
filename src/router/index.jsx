@@ -11,6 +11,7 @@ const PlantDetail = lazy(() => import('../features/plantas/detail/PlantDetail'))
 const AdminPage = lazy(() => import('../features/dashboard/AdminPage'));
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
 const RegisterPage = lazy(() => import('../features/auth/RegisterPage'));
+const Acerca = lazy(() => import('../features/acerca'));
 const ProfilePage = lazy(() => import('../features/profile/ProfilePage'));
 const NotFoundPage = lazy(() => import('../components/feedback/NotFoundPage'));
 
@@ -21,7 +22,8 @@ const AppRoutes = () => (
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
-    
+    <Route path="/acerca" element={<Acerca />} />
+
     {/* Protected routes with layout */}
     <Route element={
       <ProtectedRoute>
