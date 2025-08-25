@@ -41,29 +41,29 @@ export const AuthProvider = ({ children }) => {
     return requiredRoles.includes(role);
   }, [user, role]);
 
-  // Login function
-  const login = useCallback(async (credentials) => {
+  // Sign in function
+  const signIn = useCallback(async (credentials) => {
     setError(null);
     setIsLoading(true);
-    
+
     try {
       const response = await authApi.login(credentials);
-      
+
       if (!response.token || !response.user) {
         throw new Error('Invalid response from server');
       }
-      
+
       const { token: authToken, user: userData } = response;
-      
+
       // Store token and user data
       localStorage.setItem(TOKEN_KEY, authToken);
       localStorage.setItem(USER_KEY, JSON.stringify(userData));
-      
+
       // Update state
       setUser(userData);
       setToken(authToken);
       setRole(userData.role || ROLES.USUARIO);
-      
+
       return userData;
     } catch (err) {
       const errorMessage = err.message || 'Error de autenticación';
@@ -73,6 +73,24 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   }, []);
+
+  // Sign up function
+  const signUp = useCallback(async (userData) => {
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      await authApi.register(userData);
+      // After successful registration, automatically sign in the user
+      return await signIn({ email: userData.email, password: userData.password });
+    } catch (err) {
+      const errorMessage = err.message || 'Error de registro';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [signIn]);
 
   // Load user from localStorage on mount
   useEffect(() => {
@@ -128,7 +146,8 @@ export const AuthProvider = ({ children }) => {
     isInitialized,
     isLoading,
     error,
-    login,
+    signIn,
+    signUp,
     logout,
     hasRole,
     hasAnyRole,
