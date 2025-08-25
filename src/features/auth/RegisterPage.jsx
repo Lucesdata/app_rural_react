@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { authApi } from '../../lib/apiClient';
+import styles from './register.module.css';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -63,66 +64,66 @@ const RegisterPage = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Crear Cuenta</h2>
+    <div style={pageStyles.container}>
+      <div style={pageStyles.card}>
+        <h2 style={pageStyles.title}>Crear Cuenta</h2>
         
         {error && (
-          <div style={styles.error}>
+          <div style={pageStyles.error}>
             {error}
           </div>
         )}
         
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label htmlFor="name" style={styles.label}>Nombre Completo</label>
+        <form onSubmit={handleSubmit} style={pageStyles.form}>
+          <div style={pageStyles.formGroup}>
+            <label htmlFor="name" style={pageStyles.label}>Nombre Completo</label>
             <input
               type="text"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              style={styles.input}
+              className={styles.input}
               required
             />
           </div>
           
-          <div style={styles.formGroup}>
-            <label htmlFor="email" style={styles.label}>Correo Electrónico</label>
+          <div style={pageStyles.formGroup}>
+            <label htmlFor="email" style={pageStyles.label}>Correo Electrónico</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              style={styles.input}
+              className={styles.input}
               required
             />
           </div>
           
-          <div style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>Contraseña</label>
+          <div style={pageStyles.formGroup}>
+            <label htmlFor="password" style={pageStyles.label}>Contraseña</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              style={styles.input}
+              className={styles.input}
               required
               minLength="6"
             />
           </div>
           
-          <div style={styles.formGroup}>
-            <label htmlFor="confirmPassword" style={styles.label}>Confirmar Contraseña</label>
+          <div style={pageStyles.formGroup}>
+            <label htmlFor="confirmPassword" style={pageStyles.label}>Confirmar Contraseña</label>
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              style={styles.input}
+              className={styles.input}
               required
               minLength="6"
             />
@@ -130,19 +131,19 @@ const RegisterPage = () => {
           
           <button 
             type="submit" 
-            style={styles.submitButton}
+            className={styles.submitButton}
             disabled={isLoading}
           >
             {isLoading ? 'Registrando...' : 'Registrarse'}
           </button>
         </form>
         
-        <div style={styles.loginLink}>
+        <div style={pageStyles.loginLink}>
           ¿Ya tienes una cuenta?{' '}
           <Link 
             to="/login" 
             state={{ from }}
-            style={styles.link}
+            style={pageStyles.link}
           >
             Inicia sesión aquí
           </Link>
@@ -152,7 +153,7 @@ const RegisterPage = () => {
   );
 };
 
-const styles = {
+const pageStyles = {
   container: {
     display: 'flex',
     justifyContent: 'center',
@@ -198,37 +199,6 @@ const styles = {
     fontSize: '0.9rem',
     fontWeight: '500',
     color: '#374151',
-  },
-  input: {
-    padding: '10px 12px',
-    border: '1px solid #d1d5db',
-    borderRadius: '6px',
-    fontSize: '1rem',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-  },
-  input:focus {
-    outline: 'none',
-    borderColor: '#2563eb',
-    boxShadow: '0 0 0 3px rgba(37, 99, 235, 0.1)',
-  },
-  submitButton: {
-    marginTop: '10px',
-    padding: '12px',
-    backgroundColor: '#2563eb',
-    color: 'white',
-    border: 'none',
-    borderRadius: '6px',
-    fontSize: '1rem',
-    fontWeight: '500',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  },
-  'submitButton:hover': {
-    backgroundColor: '#1d4ed8',
-  },
-  'submitButton:disabled': {
-    backgroundColor: '#93c5fd',
-    cursor: 'not-allowed',
   },
   loginLink: {
     marginTop: '24px',
