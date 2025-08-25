@@ -23,10 +23,6 @@ const Navbar = () => {
     logout();
     navigate('/login');
   };
-  
-  if (!isAuthenticated) {
-    return null; // Don't render navbar if user is not authenticated
-  }
 
   return (
     <nav className={styles.navbar}>
@@ -39,42 +35,64 @@ const Navbar = () => {
           App_Rural
         </NavLink>
         <div className={styles.navLinks}>
-          <NavLink 
-            to="/" 
-            className={({ isActive }) => 
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
               `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
             }
             end
           >
             Inicio
           </NavLink>
-          <NavLink 
-            to="/plantas" 
-            className={({ isActive }) => 
-              `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-            }
-          >
-            Plantas
-          </NavLink>
-          <NavLink 
-            to="/dashboard" 
-            className={({ isActive }) => 
-              `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-            }
-          >
-            Dashboard
-          </NavLink>
-          <NavLink 
-            to="/acerca" 
-            className={({ isActive }) => 
+          {isAuthenticated && (
+            <>
+              <NavLink
+                to="/plantas"
+                className={({ isActive }) =>
+                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+                }
+              >
+                Plantas
+              </NavLink>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+                }
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/profile"
+                className={({ isActive }) =>
+                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+                }
+              >
+                Perfil
+              </NavLink>
+            </>
+          )}
+          <NavLink
+            to="/acerca"
+            className={({ isActive }) =>
               `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
             }
           >
             Acerca
           </NavLink>
+          {!isAuthenticated && (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+              }
+            >
+              Login/Registro
+            </NavLink>
+          )}
         </div>
         {/* Estado de sesión */}
-        {user ? (
+        {isAuthenticated && user && (
           <div className={styles.userMenuWrapper}>
             <button className={styles.userChip} onClick={() => setMenuOpen(v => !v)}>
               <span className={styles.userInitials}>{getInitials(user.name, user.email)}</span>
@@ -82,18 +100,22 @@ const Navbar = () => {
             </button>
             {menuOpen && (
               <div className={styles.userMenu} onMouseLeave={() => setMenuOpen(false)}>
-                <button className={styles.userMenuItem} disabled>Mi perfil</button>
+                <button
+                  className={styles.userMenuItem}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate('/profile');
+                  }}
+                >
+                  Mi perfil
+                </button>
                 <button className={styles.userMenuItem} onClick={handleLogout}>Cerrar sesión</button>
               </div>
             )}
           </div>
-        ) : (
-          <button className={styles.loginBtn} onClick={() => navigate('/login')}>
-            Entrar
-          </button>
         )}
         {/* Selector de rol solo si no hay sesión */}
-        {!user && (
+        {!isAuthenticated && (
           <div className={styles.roleSelector}>
             {/* ...mantener selector de rol global aquí si es necesario... */}
           </div>
