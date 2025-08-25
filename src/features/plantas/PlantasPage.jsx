@@ -19,7 +19,15 @@ export default function PlantasPage() {
       } catch (err) {
         console.error('Error loading plants:', err);
         setError('Mostrando datos de ejemplo.');
-        setList(localPlantas);
+        setList(
+          localPlantas.map((p) => ({
+            id: p.id,
+            nombre: p.planta,
+            ubicacion: p.vereda,
+            tipo: p.tipoPlanta,
+            fuente: p.fuente
+          }))
+        );
       } finally {
         setIsLoading(false);
       }
@@ -186,6 +194,9 @@ export default function PlantasPage() {
               >
                 <h4 style={{ marginTop: 0, marginBottom: '0.5rem' }}>{planta.nombre}</h4>
                 <p style={{ margin: '0.25rem 0', color: '#4b5563' }}>📍 {planta.ubicacion}</p>
+                {planta.fuente && (
+                  <p style={{ margin: '0.25rem 0', color: '#4b5563' }}>💧 {planta.fuente}</p>
+                )}
                 <p style={{ margin: '0.25rem 0', color: '#4b5563' }}>🔧 {planta.tipo}</p>
                 
                 {hasAnyRole(['ADMIN']) && (
