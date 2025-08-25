@@ -15,7 +15,7 @@ r.get('/', requireAuth, async (_req: AuthedRequest, res: Response) => {
 r.get('/:id', requireAuth, async (req: AuthedRequest, res: Response) => {
   const id = Number(req.params.id);
   const plant = await prisma.planta.findUnique({ where: { id } });
-  if (!plant) return res.status(404).json({ error: 'No encontrada' });
+  if (!plant) return res.status(404).json({ message: 'No encontrada' });
 
   // Datos adicionales simulados
   const enriched = {
@@ -51,11 +51,11 @@ r.get('/:id/lecturas', requireAuth, async (req: AuthedRequest, res: Response) =>
 r.post('/', requireAuth, async (req: AuthedRequest, res: Response) => {
   const role = req.user?.role;
   if (role !== 'ADMIN' && role !== 'OPERARIO') {
-    return res.status(403).json({ error: 'Prohibido' });
+    return res.status(403).json({ message: 'Prohibido' });
   }
   const { nombre, ubicacion, tipo } = req.body || {};
   if (!nombre || !ubicacion || !tipo) {
-    return res.status(400).json({ error: 'Faltan campos' });
+    return res.status(400).json({ message: 'Faltan campos' });
   }
   const p = await prisma.planta.create({ data: { nombre, ubicacion, tipo } });
   res.status(201).json(p);
@@ -66,9 +66,9 @@ r.delete('/:id', requireAuth, requireRole('ADMIN'), async (req: AuthedRequest, r
   const id = Number(req.params.id);
   try {
     await prisma.planta.delete({ where: { id } });
-    res.json({ ok: true });
+    res.json({ message: 'Planta eliminada' });
   } catch {
-    res.status(404).json({ error: 'No encontrada' });
+    res.status(404).json({ message: 'No encontrada' });
   }
 });
 
