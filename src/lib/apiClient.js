@@ -70,6 +70,13 @@ const apiRequest = async (endpoint, options = {}) => {
 
 // Auth API
 export const authApi = {
+  register: async (userData) => {
+    return apiRequest('/auth/register', {
+      method: 'POST',
+      body: userData
+    });
+  },
+
   login: async (credentials) => {
     return apiRequest('/auth/login', {
       method: 'POST',
@@ -99,6 +106,11 @@ export const plantasApi = {
 
   getPlant: async (id) => {
     return apiRequest(`/plantas/${id}`);
+  },
+
+  getLatestReadings: async (id, limit = 5) => {
+    const params = new URLSearchParams({ limit: String(limit) });
+    return apiRequest(`/plantas/${id}/lecturas?${params.toString()}`);
   },
 
   createPlant: async (plantData) => {

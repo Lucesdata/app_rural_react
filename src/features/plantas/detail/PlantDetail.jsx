@@ -4,7 +4,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPlant, getLatestReadings } from '../../../lib/apiClient';
+import { plantasApi } from '../../../lib/apiClient';
 import useAuth from '../../../hooks/useAuth';
 import { ROLES } from '../../../constants/roles';
 import uiStyles from '../../../styles/ui.module.css';
@@ -35,8 +35,8 @@ const PlantDetail = () => {
       try {
         setLoading(true);
         const [plantData, readingsData] = await Promise.all([
-          getPlant(id),
-          getLatestReadings(id, 5) // Últimas 5 lecturas
+          plantasApi.getPlant(id),
+          plantasApi.getLatestReadings(id, 5) // Últimas 5 lecturas
         ]);
         
         setPlant(plantData);
