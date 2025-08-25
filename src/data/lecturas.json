@@ -1,0 +1,26 @@
+[
+  {
+    "plantId": "cascajal",
+    "fecha": "2024-01-01T12:00:00Z",
+    "caudal": 4.5,
+    "cloro": 0.6,
+    "ph": 7.2,
+    "estado": "ok"
+  },
+  {
+    "plantId": "cascajal",
+    "fecha": "2024-01-02T12:00:00Z",
+    "caudal": 4.2,
+    "cloro": 0.5,
+    "ph": 7.1,
+    "estado": "ok"
+  },
+  {
+    "plantId": "campoalegre",
+    "fecha": "2024-01-03T12:00:00Z",
+    "caudal": 3.8,
+    "cloro": 0.4,
+    "ph": 6.9,
+    "estado": "warning"
+  }
+]
