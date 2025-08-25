@@ -44,16 +44,16 @@ const Navbar = () => {
           >
             Inicio
           </NavLink>
+          <NavLink
+            to="/plantas"
+            className={({ isActive }) =>
+              `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+            }
+          >
+            Plantas
+          </NavLink>
           {isAuthenticated && (
             <>
-              <NavLink
-                to="/plantas"
-                className={({ isActive }) =>
-                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-                }
-              >
-                Plantas
-              </NavLink>
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
@@ -81,14 +81,24 @@ const Navbar = () => {
             Acerca
           </NavLink>
           {!isAuthenticated && (
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-              }
-            >
-              Login/Registro
-            </NavLink>
+            <>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+                }
+              >
+                Login
+              </NavLink>
+              <NavLink
+                to="/register"
+                className={({ isActive }) =>
+                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+                }
+              >
+                Registro
+              </NavLink>
+            </>
           )}
         </div>
         {/* Estado de sesión */}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { plantasApi } from '../../lib/apiClient';
+import localPlantas from '../../data/plantas.json';
 
 export default function PlantasPage() {
   const { user, hasAnyRole } = useAuth();
@@ -9,19 +10,20 @@ export default function PlantasPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const load = async () => {
-    setIsLoading(true);
-    try {
-      const data = await plantasApi.getPlants();
-      setList(data);
-      setError("");
-    } catch (err) {
-      console.error('Error loading plants:', err);
-      setError('Error al cargar las plantas. Por favor, intente nuevamente.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const load = async () => {
+      setIsLoading(true);
+      try {
+        const data = await plantasApi.getPlants();
+        setList(data);
+        setError("");
+      } catch (err) {
+        console.error('Error loading plants:', err);
+        setError('Mostrando datos de ejemplo.');
+        setList(localPlantas);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   useEffect(() => {
     load();
