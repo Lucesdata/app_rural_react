@@ -5,7 +5,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPlant, getLatestReadings } from '../../../lib/apiClient';
-import { useAuth, ROLES } from '../../../contexts/AuthContext';
+import useAuth from '../../../hooks/useAuth';
+import { ROLES } from '../../../constants/roles';
 import uiStyles from '../../../styles/ui.module.css';
 import styles from '../../../styles/plant-detail.module.css';
 import Loading from '../../../components/feedback/Loading';

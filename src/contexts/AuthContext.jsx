@@ -144,3 +144,4 @@ export const AuthProvider = ({ children }) => {
 
 // Export the context for use with the useAuth hook
 export default AuthContext;
+export { ROLES };
