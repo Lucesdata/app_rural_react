@@ -61,6 +61,25 @@ r.post('/', requireAuth, async (req: AuthedRequest, res: Response) => {
   res.status(201).json(p);
 });
 
+// Actualizar (ADMIN u OPERARIO)
+r.put('/:id', requireAuth, async (req: AuthedRequest, res: Response) => {
+  const role = req.user?.role;
+  if (role !== 'ADMIN' && role !== 'OPERARIO') {
+    return res.status(403).json({ message: 'Prohibido' });
+  }
+  const id = Number(req.params.id);
+  const { nombre, ubicacion, tipo } = req.body || {};
+  if (!nombre || !ubicacion || !tipo) {
+    return res.status(400).json({ message: 'Faltan campos' });
+  }
+  try {
+    const p = await prisma.planta.update({ where: { id }, data: { nombre, ubicacion, tipo } });
+    res.json(p);
+  } catch {
+    res.status(404).json({ message: 'No encontrada' });
+  }
+});
+
 // Eliminar (solo ADMIN)
 r.delete('/:id', requireAuth, requireRole('ADMIN'), async (req: AuthedRequest, res: Response) => {
   const id = Number(req.params.id);
