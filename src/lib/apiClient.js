@@ -122,13 +122,6 @@ export const plantasApi = {
     });
   },
 
-  updatePlant: async (id, plantData) => {
-    return apiRequest(`/plantas/${id}`, {
-      method: 'PUT',
-      body: plantData
-    });
-  },
-
   deletePlant: async (id) => {
     return apiRequest(`/plantas/${id}`, {
       method: 'DELETE'
