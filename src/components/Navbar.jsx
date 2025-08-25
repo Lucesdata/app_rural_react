@@ -44,16 +44,16 @@ const Navbar = () => {
           >
             Inicio
           </NavLink>
+          <NavLink
+            to="/plantas"
+            className={({ isActive }) =>
+              `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+            }
+          >
+            Plantas
+          </NavLink>
           {isAuthenticated && (
             <>
-              <NavLink
-                to="/plantas"
-                className={({ isActive }) =>
-                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-                }
-              >
-                Plantas
-              </NavLink>
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
