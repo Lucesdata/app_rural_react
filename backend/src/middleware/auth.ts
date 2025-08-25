@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 export interface AuthedRequest extends Request {
-  user?: { id:number; email:string; role:'ADMIN'|'OPERARIO'|'USUARIO' };
+  user?: { id:number; email:string; role:'ADMIN'|'OPERARIO'|'PRESIDENTE_JAA'|'USUARIO' };
 }
 
 export function requireAuth(req: AuthedRequest, res: Response, next: NextFunction) {
@@ -17,7 +17,7 @@ export function requireAuth(req: AuthedRequest, res: Response, next: NextFunctio
   }
 }
 
-export function requireRole(role:'ADMIN'|'OPERARIO'|'USUARIO') {
+export function requireRole(role:'ADMIN'|'OPERARIO'|'PRESIDENTE_JAA'|'USUARIO') {
   return (req: AuthedRequest, res: Response, next: NextFunction) => {
     if (!req.user) return res.status(401).json({ error: 'No autenticado' });
     if (req.user.role !== role) return res.status(403).json({ error: 'Prohibido' });

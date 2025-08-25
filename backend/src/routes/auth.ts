@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const router = Router();
 
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body || {};
+  const { name, email, password, role } = req.body || {};
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'name, email y password requeridos' });
   }
@@ -18,8 +18,10 @@ router.post('/register', async (req, res) => {
   }
 
   const hashed = await bcrypt.hash(password, 10);
+  const validRoles = ['ADMIN', 'OPERARIO', 'PRESIDENTE_JAA', 'USUARIO'];
+  const roleToAssign = validRoles.includes(role) ? role : 'USUARIO';
   const user = await prisma.user.create({
-    data: { name, email, password: hashed }
+    data: { name, email, password: hashed, role: roleToAssign }
   });
 
   res.status(201).json({
