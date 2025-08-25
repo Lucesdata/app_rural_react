@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { plantasApi } from '../../lib/apiClient';
 import localPlantas from '../../data/plantas.json';
@@ -9,8 +9,9 @@ export default function PlantasPage() {
   const [form, setForm] = useState({ nombre: "", ubicacion: "", tipo: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const hasLoaded = useRef(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setIsLoading(true);
 
     const setLocalData = () => {
@@ -50,11 +51,13 @@ export default function PlantasPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
+    if (hasLoaded.current) return;
     load();
-  }, []);
+    hasLoaded.current = true;
+  }, [load]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
