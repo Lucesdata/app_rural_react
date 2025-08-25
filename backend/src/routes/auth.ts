@@ -52,4 +52,9 @@ router.post('/login', async (req, res) => {
   });
 });
 
+// Logout - for JWT this simply returns success as tokens are stateless
+router.post('/logout', (req, res) => {
+  res.json({ message: 'Logout exitoso' });
+});
+
 export default router;
