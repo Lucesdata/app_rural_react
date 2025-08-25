@@ -1,11 +1,13 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+import { TOKEN_KEY, USER_KEY } from '../constants/roles.js';
+
+const BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:4000';
 
 /**
  * Helper function to get auth token from localStorage
  */
 const getAuthToken = () => {
   try {
-    return localStorage.getItem('token');
+    return localStorage.getItem(TOKEN_KEY);
   } catch (error) {
     console.error('Error accessing localStorage:', error);
     return null;
@@ -48,8 +50,8 @@ const apiRequest = async (endpoint, options = {}) => {
     // Handle 401 Unauthorized
     if (response.status === 401) {
       // Clear auth data and redirect to login
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
       window.dispatchEvent(new Event('unauthorized'));
       throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
     }
@@ -88,8 +90,8 @@ export const authApi = {
     try {
       await apiRequest('/auth/logout', { method: 'POST' });
     } finally {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
     }
   },
   
