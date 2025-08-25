@@ -18,6 +18,8 @@ import ResumenTab from './components/ResumenTab';
 import LecturasTab from './components/LecturasTab';
 import EstadoTab from './components/EstadoTab';
 import InfoTab from './components/InfoTab';
+import localPlants from '@data/plantas.json';
+import localReadings from '@data/lecturas.json';
 
 const PlantDetail = () => {
   const { id } = useParams();
@@ -32,13 +34,46 @@ const PlantDetail = () => {
   // Cargar datos de la planta y lecturas
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        setLoading(true);
-        const [plantData, readingsData] = await Promise.all([
-          plantasApi.getPlant(id),
-          plantasApi.getLatestReadings(id, 5) // Últimas 5 lecturas
-        ]);
-        
+        let plantData;
+        try {
+          plantData = await plantasApi.getPlant(id);
+        } catch (err) {
+          console.error('Error fetching plant from API:', err);
+          const localPlant = localPlants.find(p => String(p.id) === String(id));
+          if (localPlant) {
+            plantData = {
+              nombre: localPlant.planta || localPlant.nombre || 'Planta',
+              ubicacion: localPlant.vereda || localPlant.corregimiento || '',
+              estado_actual: 'desconocido',
+              caudal_actual: localPlant.caudalDiseno ?? 0,
+              nivel_cloro: 0,
+              ph: 0
+            };
+          } else {
+            throw err;
+          }
+        }
+
+        let readingsData;
+        try {
+          readingsData = await plantasApi.getLatestReadings(id, 5); // Últimas 5 lecturas
+        } catch (err) {
+          console.error('Error fetching readings from API:', err);
+          readingsData = localReadings
+            .filter(r => String(r.plantId) === String(id))
+            .map(({ fecha, caudal, cloro, ph, estado }) => ({
+              fecha,
+              caudal,
+              cloro,
+              ph,
+              estado
+            }));
+        }
+
         setPlant(plantData);
         setReadings(readingsData);
       } catch (err) {
