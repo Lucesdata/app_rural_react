@@ -24,6 +24,18 @@ const AppRoutes = () => (
     <Route path="/register" element={<RegisterPage />} />
     <Route path="/acerca" element={<Acerca />} />
 
+    {/* Public plantas routes with layout */}
+    <Route element={
+      <AppLayout>
+        <Suspense fallback={<Loading fullPage />}>
+          <Outlet />
+        </Suspense>
+      </AppLayout>
+    }>
+      <Route path="/plantas" element={<PlantasPage />} />
+      <Route path="/plantas/:id" element={<PlantDetail />} />
+    </Route>
+
     {/* Protected routes with layout */}
     <Route element={
       <ProtectedRoute>
@@ -40,25 +52,21 @@ const AppRoutes = () => (
           <Home />
         </ProtectedRoute>
       } />
-      
-      {/* Plantas routes */}
-      <Route path="/plantas" element={<PlantasPage />} />
-      <Route path="/plantas/:id" element={<PlantDetail />} />
-      
+
       {/* Profile routes */}
       <Route path="/profile" element={
         <ProtectedRoute>
           <ProfilePage />
         </ProtectedRoute>
       } />
-      
+
       {/* Admin routes */}
       <Route path="/admin" element={
         <ProtectedRoute roles={['ADMIN']}>
           <AdminPage />
         </ProtectedRoute>
       } />
-      
+
       {/* Catch-all route */}
       <Route path="*" element={<NotFoundPage />} />
     </Route>
