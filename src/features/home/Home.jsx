@@ -17,36 +17,32 @@ const Home = () => {
   const { isAuthenticated, user, hasAnyRole } = useAuth();
 
   const renderAuthButtons = () => {
-    if (isAuthenticated) {
+      if (isAuthenticated) {
+        return (
+          <div className={styles.ctaRow}>
+            <Link to="/plantas" className={uiStyles.btnPrimary}>
+              Ver Plantas
+            </Link>
+            {hasAnyRole(['ADMIN', 'OPERARIO']) && (
+              <Link to="/dashboard" className={uiStyles.btnGhost}>
+                Panel de Control
+              </Link>
+            )}
+          </div>
+        );
+      }
+
       return (
         <div className={styles.ctaRow}>
           <Link to="/plantas" className={uiStyles.btnPrimary}>
             Ver Plantas
           </Link>
-          {hasAnyRole(['ADMIN', 'OPERARIO']) && (
-            <Link to="/dashboard" className={uiStyles.btnGhost}>
-              Panel de Control
-            </Link>
-          )}
+          <Link to="/login" className={uiStyles.btnGhost}>
+            Iniciar Sesión
+          </Link>
         </div>
       );
-    }
-    
-    return (
-      <div className={styles.ctaRow}>
-        <Link 
-          to="/login" 
-          className={uiStyles.btnPrimary}
-          state={{ from: '/plantas' }}
-        >
-          Iniciar Sesión
-        </Link>
-        <Link to="/registro" className={uiStyles.btnGhost}>
-          Crear Cuenta
-        </Link>
-      </div>
-    );
-  };
+    };
 
   return (
     <div className={styles.hero}>
