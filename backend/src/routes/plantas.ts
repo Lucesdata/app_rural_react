@@ -1,18 +1,18 @@
-import { Router, Response } from 'express';
+import { Router, Response, Request } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { requireAuth, requireRole, AuthedRequest } from '../middleware/auth';
 
 const prisma = new PrismaClient();
 const r = Router();
 
-// Listar (auth requerido)
-r.get('/', requireAuth, async (_req: AuthedRequest, res: Response) => {
+// Listar plantas (público)
+r.get('/', async (_req: Request, res: Response) => {
   const all = await prisma.planta.findMany({ orderBy: { id: 'asc' } });
   res.json(all);
 });
 
-// Obtener una planta por ID
-r.get('/:id', requireAuth, async (req: AuthedRequest, res: Response) => {
+// Obtener una planta por ID (público)
+r.get('/:id', async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const plant = await prisma.planta.findUnique({ where: { id } });
   if (!plant) return res.status(404).json({ message: 'No encontrada' });
@@ -29,8 +29,8 @@ r.get('/:id', requireAuth, async (req: AuthedRequest, res: Response) => {
   res.json(enriched);
 });
 
-// Obtener últimas lecturas de una planta
-r.get('/:id/lecturas', requireAuth, async (req: AuthedRequest, res: Response) => {
+// Obtener últimas lecturas de una planta (público)
+r.get('/:id/lecturas', async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const limit = parseInt((req.query.limit as string) || '5', 10);
 
