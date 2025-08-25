@@ -9,7 +9,8 @@ import { requireAuth, requireRole } from './middleware/auth';
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors({ origin: ['http://localhost:5173'], credentials: false }));
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
 
 app.get('/health', (_req, res) => res.json({ ok: true }));

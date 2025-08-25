@@ -87,36 +87,36 @@ export const authApi = {
   },
   
   getProfile: async () => {
-    return apiRequest('/auth/me');
+    return apiRequest('/me');
   }
 };
 
 // Plantas API
 export const plantasApi = {
   getPlants: async () => {
-    return apiRequest('/api/plantas');
+    return apiRequest('/plantas');
   },
-  
+
   getPlant: async (id) => {
-    return apiRequest(`/api/plantas/${id}`);
+    return apiRequest(`/plantas/${id}`);
   },
-  
+
   createPlant: async (plantData) => {
-    return apiRequest('/api/plantas', {
+    return apiRequest('/plantas', {
       method: 'POST',
       body: plantData
     });
   },
-  
+
   updatePlant: async (id, plantData) => {
-    return apiRequest(`/api/plantas/${id}`, {
+    return apiRequest(`/plantas/${id}`, {
       method: 'PUT',
       body: plantData
     });
   },
-  
+
   deletePlant: async (id) => {
-    return apiRequest(`/api/plantas/${id}`, {
+    return apiRequest(`/plantas/${id}`, {
       method: 'DELETE'
     });
   }
