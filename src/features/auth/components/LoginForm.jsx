@@ -28,14 +28,15 @@ export default function LoginForm() {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      // Simular sign-in
-      const user = { email, role: 'user' };
-      signIn(user);
-      // Redirigir
+    try {
+      await signIn({ email, password });
       const redirectTo = location.state?.from?.pathname || '/dashboard';
       navigate(redirectTo, { replace: true });
-    }, 700);
+    } catch (err) {
+      setError(err.message || 'Error al iniciar sesión');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
