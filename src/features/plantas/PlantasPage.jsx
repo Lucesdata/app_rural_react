@@ -10,28 +10,47 @@ export default function PlantasPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-    const load = async () => {
-      setIsLoading(true);
-      try {
-        const data = await plantasApi.getPlants();
-        setList(data);
-        setError("");
-      } catch (err) {
-        console.error('Error loading plants:', err);
-        setError('Mostrando datos de ejemplo.');
-        setList(
-          localPlantas.map((p) => ({
-            id: p.id,
-            nombre: p.planta,
-            ubicacion: p.vereda,
-            tipo: p.tipoPlanta,
-            fuente: p.fuente
-          }))
-        );
-      } finally {
-        setIsLoading(false);
-      }
+  const load = async () => {
+    setIsLoading(true);
+
+    const setLocalData = () => {
+      setError('Mostrando datos de ejemplo.');
+      setList(
+        localPlantas.map((p) => ({
+          id: p.id,
+          nombre: p.planta,
+          ubicacion: p.vereda,
+          tipo: p.tipoPlanta,
+          fuente: p.fuente
+        }))
+      );
     };
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+        setLocalData();
+        return;
+      }
+
+      const data = await plantasApi.getPlants();
+      setList(data);
+      setError("");
+    } catch (err) {
+      const isConnectionError =
+        (typeof navigator !== 'undefined' && navigator.onLine === false) ||
+        err.name === 'TypeError';
+
+      if (isConnectionError) {
+        console.warn('Error de conexión al cargar plantas');
+      } else {
+        console.error('Error loading plants:', err);
+      }
+
+      setLocalData();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     load();
