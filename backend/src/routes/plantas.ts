@@ -11,6 +11,42 @@ r.get('/', requireAuth, async (_req: AuthedRequest, res: Response) => {
   res.json(all);
 });
 
+// Obtener una planta por ID
+r.get('/:id', requireAuth, async (req: AuthedRequest, res: Response) => {
+  const id = Number(req.params.id);
+  const plant = await prisma.planta.findUnique({ where: { id } });
+  if (!plant) return res.status(404).json({ error: 'No encontrada' });
+
+  // Datos adicionales simulados
+  const enriched = {
+    ...plant,
+    estado_actual: 'ok',
+    caudal_actual: 0,
+    nivel_cloro: 0,
+    ph: 7
+  };
+
+  res.json(enriched);
+});
+
+// Obtener últimas lecturas de una planta
+r.get('/:id/lecturas', requireAuth, async (req: AuthedRequest, res: Response) => {
+  const id = Number(req.params.id);
+  const limit = parseInt((req.query.limit as string) || '5', 10);
+
+  // Generar lecturas simuladas
+  const readings = Array.from({ length: limit }, (_, i) => {
+    const fecha = new Date(Date.now() - i * 3600 * 1000);
+    const caudal = Number((Math.random() * 10).toFixed(2));
+    const cloro = Number((Math.random() * 1).toFixed(2));
+    const ph = Number((6 + Math.random() * 2).toFixed(2));
+    const estado = 'ok';
+    return { fecha, caudal, cloro, ph, estado };
+  });
+
+  res.json(readings);
+});
+
 // Crear (ADMIN u OPERARIO)
 r.post('/', requireAuth, async (req: AuthedRequest, res: Response) => {
   const role = req.user?.role;
