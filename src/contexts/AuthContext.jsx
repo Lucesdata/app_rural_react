@@ -24,6 +24,9 @@ export const AuthProvider = ({ children }) => {
 
   // Logout function
   const logout = useCallback(() => {
+    authApi.logout().catch(err => {
+      console.error('Error during logout:', err);
+    });
     clearAuthData();
   }, [clearAuthData]);
 
