@@ -1,16 +1,16 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import router from './router';
-import ErrorBoundary from './components/ErrorBoundary';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import './styles/global.css';
+import AppRouter from './router';
 
-const container = document.getElementById('root');
-const root = createRoot(container);
-
-root.render(
-  <React.StrictMode>
-    <ErrorBoundary>
-      <RouterProvider router={router} />
-    </ErrorBoundary>
-  </React.StrictMode>
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <AuthProvider>
+      <Router>
+        <AppRouter />
+      </Router>
+    </AuthProvider>
+  </StrictMode>
 );

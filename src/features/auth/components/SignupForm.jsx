@@ -15,7 +15,7 @@ const ROLES = [
 ];
 
 export default function SignupForm() {
-  const { signUp } = useAuth();
+  const { signIn, signUp } = useAuth();
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('USUARIO');
@@ -49,6 +49,7 @@ export default function SignupForm() {
       // Simular registro y login
       const user = { name: nombre, email, role: rol };
       signUp(user);
+      signIn(user);
       navigate('/dashboard', { replace: true });
     }, 700);
   };

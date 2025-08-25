@@ -3,17 +3,33 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Navigate, useLocation } from 'react-router-dom';
 
 export default function ProtectedRoute({ children, roles }) {
-  const { user } = useAuth();
+  const { isAuthenticated, hasAnyRole, isInitialized } = useAuth();
   const location = useLocation();
 
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!isInitialized) {
+    return <div>Cargando...</div>; // Or a loading spinner
   }
 
-  if (roles && !roles.includes(user.role)) {
+  if (!isAuthenticated) {
+    const redirectTo = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?redirectTo=${redirectTo}`} replace />;
+  }
+
+  if (roles && !hasAnyRole(roles)) {
     return (
-      <div style={{color:'#f87171',textAlign:'center',marginTop:'3rem',fontSize:'1.2rem'}}>
-        No autorizado para ver esta sección.
+      <div style={{
+        color: '#dc2626',
+        textAlign: 'center',
+        marginTop: '3rem',
+        padding: '1rem',
+        backgroundColor: '#fef2f2',
+        borderRadius: '0.375rem',
+        maxWidth: '600px',
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }}>
+        <h3>Acceso no autorizado</h3>
+        <p>No tienes los permisos necesarios para acceder a esta sección.</p>
       </div>
     );
   }

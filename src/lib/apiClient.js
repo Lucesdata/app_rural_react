@@ -1,48 +1,123 @@
-export const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-function getToken() {
+/**
+ * Helper function to get auth token from localStorage
+ */
+const getAuthToken = () => {
   try {
     return localStorage.getItem('token');
   } catch (error) {
     console.error('Error accessing localStorage:', error);
     return null;
   }
-}
+};
 
-export async function api(path, opts = {}) {
-  const { method = 'GET', headers = {}, body, auth = true } = opts;
-
-  const finalHeaders = {
+/**
+ * Generic API request handler
+ */
+const apiRequest = async (endpoint, options = {}) => {
+  const { method = 'GET', body, headers = {}, ...rest } = options;
+  
+  // Set up headers
+  const requestHeaders = new Headers({
     'Content-Type': 'application/json',
     ...headers
+  });
+
+  // Add auth token if available
+  const token = getAuthToken();
+  if (token) {
+    requestHeaders.set('Authorization', `Bearer ${token}`);
+  }
+
+  // Prepare request config
+  const config = {
+    method,
+    headers: requestHeaders,
+    ...rest
   };
 
-  const token = auth ? getToken() : null;
-  if (token) {
-    finalHeaders.Authorization = `Bearer ${token}`;
+  // Add body if present
+  if (body) {
+    config.body = JSON.stringify(body);
   }
 
   try {
-    const response = await fetch(`${BASE_URL}${path}`, {
-      method,
-      headers: finalHeaders,
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    const response = await fetch(`${BASE_URL}${endpoint}`, config);
+    
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      // Clear auth data and redirect to login
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.dispatchEvent(new Event('unauthorized'));
+      throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+    }
 
-    const contentType = response.headers.get('content-type');
-    const isJson = contentType && contentType.includes('application/json');
-    const data = isJson ? await response.json() : await response.text();
-
+    // Parse response
+    const data = await response.json().catch(() => ({}));
+    
     if (!response.ok) {
-      if (response.status === 401) {
-        window.dispatchEvent(new CustomEvent('auth:unauthorized'));
-      }
-      throw new Error(data?.error || `HTTP ${response.status}`);
+      throw new Error(data.message || 'Error en la petición');
     }
 
     return data;
   } catch (error) {
-    console.error('API call failed:', error);
+    console.error('API request failed:', error);
     throw error;
   }
-}
+};
+
+// Auth API
+export const authApi = {
+  login: async (credentials) => {
+    return apiRequest('/auth/login', {
+      method: 'POST',
+      body: credentials
+    });
+  },
+  
+  logout: async () => {
+    try {
+      await apiRequest('/auth/logout', { method: 'POST' });
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+  },
+  
+  getProfile: async () => {
+    return apiRequest('/auth/me');
+  }
+};
+
+// Plantas API
+export const plantasApi = {
+  getPlants: async () => {
+    return apiRequest('/api/plantas');
+  },
+  
+  getPlant: async (id) => {
+    return apiRequest(`/api/plantas/${id}`);
+  },
+  
+  createPlant: async (plantData) => {
+    return apiRequest('/api/plantas', {
+      method: 'POST',
+      body: plantData
+    });
+  },
+  
+  updatePlant: async (id, plantData) => {
+    return apiRequest(`/api/plantas/${id}`, {
+      method: 'PUT',
+      body: plantData
+    });
+  },
+  
+  deletePlant: async (id) => {
+    return apiRequest(`/api/plantas/${id}`, {
+      method: 'DELETE'
+    });
+  }
+};

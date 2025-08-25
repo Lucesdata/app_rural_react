@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth, ROLES } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import styles from '../auth.module.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ export default function LoginForm() {
     setLoading(true);
     setTimeout(() => {
       // Simular sign-in
-      const user = { email, role: ROLES.USUARIO };
+      const user = { email, role: 'user' };
       signIn(user);
       // Redirigir
       const redirectTo = location.state?.from?.pathname || '/dashboard';

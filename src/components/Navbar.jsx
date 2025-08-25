@@ -6,7 +6,7 @@ import styles from '../styles/ui.module.css';
 
 const getInitials = (name, email) => {
   if (name) {
-    return name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+    return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   }
   if (email) {
     return email[0].toUpperCase();
@@ -15,14 +15,18 @@ const getInitials = (name, email) => {
 };
 
 const Navbar = () => {
-  const { user, signOut } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   const handleLogout = () => {
-    signOut();
+    logout();
     navigate('/login');
   };
+  
+  if (!isAuthenticated) {
+    return null; // Don't render navbar if user is not authenticated
+  }
 
   return (
     <nav className={styles.navbar}>
